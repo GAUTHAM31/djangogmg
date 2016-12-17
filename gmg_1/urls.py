@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^$',views.index),
     url(r'^login/',views.logina),
     url(r'^lrequest/',views.l_request),
+    url(r'^home/',views.home),
 ]
