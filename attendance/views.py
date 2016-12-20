@@ -34,7 +34,7 @@ def logina(request):
 			return render_to_response('attendance/index.html', {}, context)#redirect to invaild  username password url
 			#HttpResponse("invaild")
 	else:
-		return render_to_response('attendance/index.html', {}, context)
+		return redirect('')
 
 @login_required
 def home(request):
@@ -48,4 +48,13 @@ def home(request):
 def l_request(request):
 	emp = employee.objects.get(user=request.user)
 	return render(request,'attendance/lrequest.html',{'employee':emp})
+
+
+@login_required
+def send(request):
+	context = RequestContext(request)
+	if request.method == 'POST':
+		return HttpResponse("sucess")
+	else:
+		return redirect('/lrequest/')
 

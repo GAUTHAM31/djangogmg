@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^login/',views.logina),
     url(r'^lrequest/',views.l_request),
     url(r'^home/',views.home),
+    url(r'^lrequestConfirmed/',views.send),
 ]
