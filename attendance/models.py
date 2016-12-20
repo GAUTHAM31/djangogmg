@@ -13,15 +13,10 @@ class employee(models.Model):
 	REQUIRED_FIELDS = ['user', 'eid']
 
    
-class a_leave(models.Model):
-    emp_id = models.ForeignKey(employee, on_delete=models.CASCADE)
-    date = models.DateField()
-    l_type = models.BooleanField()#leave type casual=True or sick=False
-    halfday = models.BooleanField()#True=halfday
 
 class r_leave(models.Model):
     emp_id = models.ForeignKey(employee, on_delete=models.CASCADE)
     date1 = models.DateField()#leave period start
     date2 = models.DateField()#leave period end
-    l_type = models.BooleanField()
-    halfday = models.BooleanField()
+    l_type = models.CharField(max_length=10)
+    reason = models.CharField(max_length=100)
