@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    "/root/gmg_1/gmg_1/static",
+    "/home/another/new/djangogmg/gmg_1/static",
     ]
 if not os.environ.get("DISABLE_UTF8_REDEFINE"):
     sys.stdout = codecs.getwriter('utf8')(sys.stdout)
