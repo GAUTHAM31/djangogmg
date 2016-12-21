@@ -24,7 +24,7 @@ def logina(request):
 		
 		if user:
 			if user.is_active:
-                login(request,user)
+				login(request,user)
 				#usr = User.objects.get(username=username)
 				#emp = employee.objects.get(user=usr)
 				#return render(request,'attendance/login.html',{'employee':emp})
@@ -35,7 +35,7 @@ def logina(request):
 			return render_to_response('attendance/index.html', {}, context)#redirect to invaild  username password url
 			#HttpResponse("invaild")
 	else:
-		return redirect('')
+		return redirect(index)
 
 @login_required
 def home(request):
@@ -55,14 +55,14 @@ def l_request(request):
 def send(request):
 	context = RequestContext(request)
 	if request.method == 'POST':
-        eid= employee.objects.get(user=request.user).eid
-        date_1= request.POST['datef']
+		#eid= employee.objects.get(user=request.user).eid
+		date_1= request.POST['datef']
         date_2= request.POST['datet']
         ltype= request.POST['type']
         reason1= request.POST['reason']
-        b=r_leave(emp_id=eid,date1=date_1,date2=date_2,ltype=l_type,reason=reason1)
+        b=r_leave(emp_id=employee.objects.get(user=request.user),date1=date_1,date2=date_2,l_type=ltype,reason=reason1)
         b.save()
-		return HttpResponse("sucess")
-	else:
-		return redirect('/lrequest/')
+        return HttpResponse("sucess")
+   	#else:
+		#return redirect('/lrequest/')
 
