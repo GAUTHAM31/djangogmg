@@ -62,4 +62,4 @@ if __name__ == "__main__":
     TO = 'gauthamgajith@gmail.com'
     FROM ='test4generalpurpose@gmail.com'
  
-    py_mail("Test email subject", email_content, TO, FROM)
+    #py_mail("Test email subject", email_content, TO, FROM)

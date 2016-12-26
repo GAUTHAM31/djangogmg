@@ -1,11 +1,14 @@
 from django.contrib import admin
-from .models import employee,r_leave
+from .models import employee,r_leave,public_holidays
 # Register your models here.
 class employeeAdmin(admin.ModelAdmin):
-	list_display = ['user','salary','eid','s_leave','c_leave','present']
+	list_display = ['user','salary','eid','s_leave','c_leave','present','dept']
 class r_leaveAdmin(admin.ModelAdmin):
-	list_display = ['emp_id','date1','date2','l_type','halfday']
-
+	readonly_field=('no_of_days',)
+	list_display = ['emp_id','date1','date2','no_of_days','l_type','reason']
+class public_holidaysAdmin(admin.ModelAdmin):
+	list_display = ['day']
 
 admin.site.register(employee,employeeAdmin)
 admin.site.register(r_leave,r_leaveAdmin)
+admin.site.register(public_holidays,public_holidaysAdmin)

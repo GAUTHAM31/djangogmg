@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^lrequest/',views.l_request),
     url(r'^home/',views.home),
     url(r'^lrequestConfirmed/',views.send),
+    url(r'^confirmation/',views.ladd),
 ]
