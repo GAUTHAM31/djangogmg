@@ -31,6 +31,8 @@ class r_leave(models.Model):
 
 class public_holidays(models.Model):
 	day=models.DateField()
-	
-		
-    
+
+class team_lead(models.Model):
+	DEPT_CHOICES = (('BA', 'Business Analysis Team'),('dev', 'Developer'),('QA', 'Quality Team'))
+	dept = models.CharField(max_length=3,choices=DEPT_CHOICES,default='BA')
+	email=models.EmailField(max_length=254)
