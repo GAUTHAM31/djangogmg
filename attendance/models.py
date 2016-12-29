@@ -27,6 +27,7 @@ class r_leave(models.Model):
     l_type = models.CharField(max_length=10,choices=leave_type_choice,default='CL')
     reason = models.CharField(max_length=100)
     confirmation=models.IntegerField(default=0)
+    l_id = models.AutoField(primary_key=True)
 
 
 class public_holidays(models.Model):
