@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^lrequest/',views.l_request),
     url(r'^home/',views.home),
     url(r'^overview/',views.overview),
+    url(r'^approve_leave/',views.approve_leave),
     url(r'^lrequestConfirmed/',views.send),
     url(r'^confirmation/',views.ladd),
     url(r'^approve/(?P<hash>\w+)/(?P<enc>\w+)',views.approval),

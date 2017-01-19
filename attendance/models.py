@@ -30,8 +30,8 @@ class managedby(models.Model):
 class r_leave(models.Model):
     emp_id = models.ForeignKey(employee, on_delete=models.CASCADE)
     date1 = models.DateField()#leave period start
-    date2 = models.DateField()#leave period end
-    no_of_days=models.IntegerField(default=0)
+    #date2 = models.DateField()#leave period end
+    #no_of_days=models.IntegerField(default=0)
     leave_type_choice=(('SL','sick leave'),('CL','Casaul leave'),('EL','Earned Leave'))
     l_type = models.CharField(max_length=10,choices=leave_type_choice,default='CL')
     reason = models.CharField(max_length=100)

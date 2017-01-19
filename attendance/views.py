@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from attendance.models import employee, r_leave , public_holidays ,admins
+from attendance.models import employee, r_leave , public_holidays ,admins, managedby
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -54,6 +54,16 @@ def overview(request):
     rl = list(r_leave.objects.filter(emp_id=emp))
     return render(request,'attendance/overview.html',{'rlist':rl})
 
+@login_required
+def approve_leave(request):
+    emp = employee.objects.get(user=request.user)
+    ml = list(managedby.objects.filter(mid=emp.eid))
+    rl = list()
+    for item in ml:
+         l1 = list(r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0))
+        
+         rl.extend(l1)
+    return render(request,'attendance/approve_leave.html',{'rlist':rl})
 
 @login_required
 def l_request(request):
@@ -131,10 +141,12 @@ Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reaso
 <a href="http://localhost:8000/approve/"""+hash0+"/"+enc0+"""" >
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
-		to = managedby.objects.all().filter(eid=emp.mid).user.email
+        #add default email here if necessary
+		to = managedby.objects.all().filter(eid=emp.eid)
 		FROM ='test4generalpurpose@gmail.com'
 		for TO in to:
-			teste.py_mail("Leave Request", email_content, TO.user.email, FROM)
+			mm=employee.objects.get(eid=TO.mid)
+			teste.py_mail("Leave Request", email_content, mm.email, FROM)
 		return redirect('/confirmation/')
 	else:
 		return redirect('/lrequest/')

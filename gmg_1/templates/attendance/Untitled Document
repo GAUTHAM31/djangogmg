@@ -10,13 +10,15 @@ welcome
     <th>Leave Type</th>
     <th>Date</th> 
     <th>Reason</th>
-    <th>Status</th>
+    <th>name</th>
+    <th>approve</th>
   </tr>
     {% for item in rlist %}
        <tr>
         <td>{{ item.l_type }}</td>
         <td>{{ item.date1 }}</td>
         <td>{{ item.reason }}</td>
+        <td>{{ item.emp_id.fname }}</td>
         {% if item.confirmation == 0 %}
             <td>approved</td>
         {% else %}
