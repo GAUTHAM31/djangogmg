@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+ <form class="adduser form" method="post" action="/adduser/">
+    {% csrf_token %}
+      <input type="text" name="username" placeholder="username"/>
+      <input type="text" name="fname" placeholder="fname"/>
+
+      <input type="text" name="lname" placeholder="lname"/>
+
+      <input type="text" name="email" placeholder="email"/>
+
+      <input type="password" name="password" placeholder="password"/>
+      <button>ADD</button>
+      <p class="message">Forget password? <a href="#">Contact</a></p>
+    </form>
+
+<p>If you click the "Submit" button, the form-data will be sent to a page called "action_page.php".</p>
+
+</body>
+</html>

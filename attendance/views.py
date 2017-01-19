@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from attendance.models import employee, r_leave , public_holidays , team_lead
+from attendance.models import employee, r_leave , public_holidays ,admins
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from dateutil.parser import parse as parse_date
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.contrib.auth import logout
 import teste
 import numpy as np
 import datetime 
@@ -125,11 +126,11 @@ Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reaso
 <a href="http://localhost:8000/approve/"""+hash0+"/"+enc0+"""" >
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
-		to = team_lead.objects.all().filter(dept=emp.dept)
-		FROM ='test4generalpurpose@gmail.com'
-		for TO in to:
-			teste.py_mail("Leave Request", email_content, TO.email, FROM)
-		return redirect('/confirmation/')
+		#to = team_lead.objects.all().filter(dept=emp.dept)
+		#FROM ='test4generalpurpose@gmail.com'
+		#for TO in to:
+		#	teste.py_mail("Leave Request", email_content, TO.email, FROM)
+		#return redirect('/confirmation/')
 	else:
 		return redirect('/lrequest/')
 
@@ -149,3 +150,53 @@ def approval(request,hash,enc):
 	leave.save()
 	return HttpResponse("confirmation recorded")
 
+@login_required
+def logoutf(request):
+	logout(request)
+	return redirect(index)
+
+def adminl(request):
+	return render(request,'attendance/adminlogin.html',{})
+
+def admincheck(request):
+	context = RequestContext(request)
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username,password=password)
+		try:
+			admin=admins.objects.get(user=user)
+		except admins.DoesNotExist:
+			admin=None
+		if admin:
+			return HttpResponse("hey admin")#put redirect home address for admin later
+		else:
+			return redirect(adminl)
+
+	else:
+			return redirect(adminl)#put correct redirect later
+
+def addusermain(request):
+	return render(request,'attendance/adduser.html',{})
+
+
+def adduser(request):
+    if request.method == 'POST':
+        query_dict = request.POST
+        username = query_dict['username']
+        email = query_dict['email']
+       	password = query_dict['password']
+       	fname=query_dict['fname']
+       	lname=query_dict['lname']
+       	#read rest of the inputs
+        new_user = User.objects.create_user(username,email,password)
+        new_user.save()
+        emp=User.objects.get(username=username)
+        p=employee(user=emp,fname=fname,lname=lname,eid='52187612')
+        p.save()
+        return redirect(addusersuccess)
+    else:
+    	return redirect(addusermain)
+
+def addusersuccess(request):
+	return HttpResponse("sucess")
