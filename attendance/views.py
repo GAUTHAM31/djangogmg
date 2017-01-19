@@ -18,9 +18,9 @@ import hashtest
 
 def index(request):
 	if request.user.is_authenticated():
-		return redirect('/home/')
+		return redirect(home)
 	else:
-		return render(request,'attendance/index.html',{})
+		return render(request,'attendance/login.html',{})
 	# Create your views here.
 
 def logina(request):
@@ -33,11 +33,11 @@ def logina(request):
 		if user:
 			if user.is_active:
 				login(request,user)
-				return redirect('/home/')
+				return redirect(home)
 			else:
 				return HttpResponse("DISABLED")
 		else:
-			return render_to_response('attendance/index.html', {}, context)#redirect to invaild  username password url
+			return redirect(index)#redirect to invaild  username password url
 			#HttpResponse("invaild")
 	else:
 		return redirect(index)#redirect if not post request was send
@@ -45,9 +45,14 @@ def logina(request):
 @login_required
 def home(request):
 	emp = employee.objects.get(user=request.user)
-	return render(request,'attendance/login.html',{'employee':emp})
+	return render(request,'attendance/home.html',{'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave})
+    
 
-
+@login_required
+def overview(request):
+    emp = employee.objects.get(user=request.user)
+    rl = list(r_leave.objects.filter(emp_id=emp))
+    return render(request,'attendance/overview.html',{'rlist':rl})
 
 
 @login_required
@@ -126,13 +131,13 @@ Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reaso
 <a href="http://localhost:8000/approve/"""+hash0+"/"+enc0+"""" >
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
-		#to = team_lead.objects.all().filter(dept=emp.dept)
-		#FROM ='test4generalpurpose@gmail.com'
-		#for TO in to:
-		#	teste.py_mail("Leave Request", email_content, TO.email, FROM)
-		#return redirect('/confirmation/')
-	else:
-		return redirect('/lrequest/')
+		to = managedby.objects.all().filter(eid=emp.mid).user.email
+        FROM ='test4generalpurpose@gmail.com'
+        for TO in to:
+            teste.py_mail("Leave Request", email_content, TO.user.email, FROM)
+        return redirect('/confirmation/')
+    else:
+        return redirect('/lrequest/')
 
 @login_required
 def ladd(request):
@@ -200,3 +205,7 @@ def adduser(request):
 
 def addusersuccess(request):
 	return HttpResponse("sucess")
+
+
+
+

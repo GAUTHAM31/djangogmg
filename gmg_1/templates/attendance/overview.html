@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>welcome</title>
+</head>
+<body>
+welcome 
+
+<ul>
+{% for item in rlist %}
+    <li>{{ item.l_type }}
+    {{ item.date1 }}
+    {{ item.reason }}
+    {{ item.confirmation }}</li>
+{% endfor %}
+</ul>
+<table style="width:100%">
+  <tr>
+    <th>Leave Type</th>
+    <th>Date</th> 
+    <th>Reason</th>
+    <th>Status</th>
+  </tr>
+    {% for item in rlist %}
+       <tr>
+        <td>{{ item.l_type }}</td>
+        <td>{{ item.date1 }}</td>
+        <td>{{ item.reason }}</td>
+        {% if item.confirmation == 0 %}
+            <td>approved</td>
+        {% else %}
+            <td>pending</td>
+        {% endif %}
+       </tr>
+    {% endfor %}
+</table>
+<a href="/home/">go back home</a>
+
+
+</body>
+</html>
