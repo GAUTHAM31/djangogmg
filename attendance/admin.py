@@ -5,7 +5,7 @@ class employeeAdmin(admin.ModelAdmin):
 	list_display = ['user','eid','s_leave','c_leave','present','dept']
 class r_leaveAdmin(admin.ModelAdmin):
 	readonly_field=('no_of_days',)
-	list_display = ['emp_id','date1','date2','no_of_days','l_type','reason','l_id','confirmation']
+	list_display = ['emp_id','date1','l_type','reason','l_id','confirmation']
 class public_holidaysAdmin(admin.ModelAdmin):
 	list_display = ['day']
 class adminsAdmin(admin.ModelAdmin):
