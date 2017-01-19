@@ -64,7 +64,14 @@ def approve_leave(request):
         
          rl.extend(l1)
     return render(request,'attendance/approve_leave.html',{'rlist':rl})
-
+@login_required
+def approveselected(request):
+    if request.method == 'POST':
+       lrid= request.POST['l_id']
+       rlobj=r_leave.objects.get(l_id=lrid)
+       rlobj.confirmation=1
+       rlobj.save()
+       return redirect(approve_leave)
 @login_required
 def l_request(request):
 	emp = employee.objects.get(user=request.user)
@@ -76,24 +83,24 @@ def send(request):
 	context = RequestContext(request)
 	if request.method == 'POST':
 		date_1= request.POST['datef']
-		date_2= request.POST['datet']
+		#date_2= request.POST['datet']
 		ltype= request.POST['type']
 		reason1= request.POST['reason']
 		#converting date from unicode to date---------------------
 		date_1=parse_date(date_1)
-		date_2=parse_date(date_2)
+		#date_2=parse_date(date_2)
 		date_1=datetime.date(date_1.year, date_1.month, date_1.day)
-		date_2=datetime.date(date_2.year, date_2.month, date_2.day)
+		#date_2=datetime.date(date_2.year, date_2.month, date_2.day)
 		#to count no of days---------------------------------------
-		days = np.busday_count( date_1, date_2 )
-		holidays=public_holidays.objects.all()
-		for holiday in holidays:
-			if date_1<holiday.day and date_2>holiday.day:
-				if holiday.day.isoweekday()<6:
-					days=days-1
+		#days = np.busday_count( date_1, date_2 )
+		#holidays=public_holidays.objects.all()
+		#for holiday in holidays:
+			#if date_1<holiday.day and date_2>holiday.day:
+				#if holiday.day.isoweekday()<6:
+					#days=days-1
 		#adding request to database----------------------------------------------------------------
 		emp=employee.objects.get(user=request.user)
-		b=r_leave(emp_id=emp,no_of_days=days,date1=date_1,date2=date_2,l_type=ltype,reason=reason1)
+		b=r_leave(emp_id=emp,date1=date_1,l_type=ltype,reason=reason1)
 		b.save()
 		#making temp url--------------------------------------------
 		hash1, enc1 = hashtest.encode_data([emp.eid,b.l_id,1])
@@ -133,9 +140,7 @@ def send(request):
 .button2 {background-color: #008CBA;} 
 </style>
 </head>
-<body>
-<div>"""+emp.user.username+" in your team wants "+lt+" to take leave from"+str(date_1)+"to "+str(date_2)+""" 
-Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reason1+"""
+<body>Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reason1+"""
 <a href="http://localhost:8000/approve/"""+hash1+"/"+enc1+"""" >
 <button class="button button2" name="response">Yes</button></a></div>
 <a href="http://localhost:8000/approve/"""+hash0+"/"+enc0+"""" >

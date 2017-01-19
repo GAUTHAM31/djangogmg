@@ -19,10 +19,16 @@ welcome
         <td>{{ item.date1 }}</td>
         <td>{{ item.reason }}</td>
         <td>{{ item.emp_id.fname }}</td>
-        {% if item.confirmation == 0 %}
+        {% if item.confirmation == 1 %}
             <td>approved</td>
         {% else %}
-            <td>pending</td>
+            <td>
+                <form action="/approve_submit/" method="post">
+                {% csrf_token %}
+                <input type="hidden" value={{ item.l_id }} name="l_id"/>
+                <input type="submit" class="btn" value=Approve name="mybtn">
+                </form>
+            </td>
         {% endif %}
        </tr>
     {% endfor %}

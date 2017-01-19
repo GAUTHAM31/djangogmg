@@ -17,7 +17,7 @@ welcome
         <td>{{ item.l_type }}</td>
         <td>{{ item.date1 }}</td>
         <td>{{ item.reason }}</td>
-        {% if item.confirmation == 0 %}
+        {% if item.confirmation == 1 %}
             <td>approved</td>
         {% else %}
             <td>pending</td>
