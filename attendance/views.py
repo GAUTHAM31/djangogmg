@@ -132,12 +132,12 @@ Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reaso
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
 		to = managedby.objects.all().filter(eid=emp.mid).user.email
-        FROM ='test4generalpurpose@gmail.com'
-        for TO in to:
-            teste.py_mail("Leave Request", email_content, TO.user.email, FROM)
-        return redirect('/confirmation/')
-    else:
-        return redirect('/lrequest/')
+		FROM ='test4generalpurpose@gmail.com'
+		for TO in to:
+			teste.py_mail("Leave Request", email_content, TO.user.email, FROM)
+		return redirect('/confirmation/')
+	else:
+		return redirect('/lrequest/')
 
 @login_required
 def ladd(request):
