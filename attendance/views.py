@@ -72,6 +72,13 @@ def approveselected(request):
        rlobj=r_leave.objects.get(l_id=lrid)
        rlobj.confirmation=1
        rlobj.save()
+       #if rlobj.l_type =='CL':
+       # rlobj.emp_id.c_leave=rlobj.emp_id.c_leave-1
+       #elif rlobj.l_type == 'SL':
+       # rlobj.emp_id.s_leave=rlobj.emp_id.s_leave-1
+       #else:
+       # rlobj.emp_id.e_leave=rlobj.emp_id.e_leave-1
+       #rlobj.emp_id.save()
        return redirect(approve_leave)
 
 @login_required
@@ -263,18 +270,98 @@ def customreport(request):
         return render(request,'attendance/customreport.html',{'clist':dayatt})
     else:
         customattlist=list()
-        return render(request,'attendance/customreport.html',{'clist':dayatt})
-        
-        
-
-
-       
-    
-    
+        return render(request,'attendance/customreport.html',{'clist':dayatt})    
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
 	return render(request,'attendance/adduser.html',{})
-    
+
+@login_required(login_url='/adminlogin/')
+def edituser(request):
+    details=list()
+    if request.method=='POST':
+        eid=request.POST['eid']
+        details=employee.objects.get(eid=eid)
+
+        return render(request,'attendance/edituser.html',{'det':details})
+    else: 
+        return render(request,'attendance/edituser.html',{'det':details})    
+
+@login_required(login_url='/adminlogin/')
+def editsuccess(request):
+    rm=request.POST
+    eid=rm['eid']
+    fn=rm['fn']
+    ln=rm['ln']
+    #d=rm['d']
+    jd=rm['jd']
+    td=rm['td']
+    email=rm['email']
+    date1=parse_date(jd)
+    date2=parse_date(td)
+    date1=datetime.date(date1.year, date1.month, date1.day)
+    date2=datetime.date(date2.year, date2.month, date2.day)
+    emp=employee.objects.get(eid=eid)
+    emp.fname=fn
+    emp.lname=ln
+    #emp.dept=d
+    emp.j_date=date1
+    emp.t_date=date2
+    emp.user.email=email
+    emp.save();
+    return render(request, 'attendance/editsuccess.html',{})
+
+@login_required(login_url='/adminlogin/')
+def adminapprove_leave(request):
+    l1 = list(r_leave.objects.filter(confirmation=0))
+    return render(request,'attendance/adminapproveleave.html',{'rlist':l1})
+
+
+@login_required(login_url='/adminlogin/')
+def adminapproveselected(request):
+    if request.method == 'POST':
+       lrid= request.POST['l_id']
+       rlobj=r_leave.objects.get(l_id=lrid)
+       rlobj.confirmation=1
+       rlobj.save()
+       #if rlobj.l_type =='CL':
+       # rlobj.emp_id.c_leave=rlobj.emp_id.c_leave-1
+       #elif rlobj.l_type == 'SL':
+       # rlobj.emp_id.s_leave=rlobj.emp_id.s_leave-1
+       #else:
+       # rlobj.emp_id.e_leave=rlobj.emp_id.e_leave-1
+       #rlobj.emp_id.save()
+       return redirect(adminapprove_leave)
+
+@login_required(login_url='/adminlogin/')
+def unauthorised(request):
+    ulist=att_record.objects.filter(status=0)
+    return render(request,'attendance/unauthorised.html',{'ulist':ulist})
+
+@login_required(login_url='/adminlogin/')
+def editunauthorised(request):
+    if request.method == 'POST':
+       eid= request.POST['emp_id']
+       date= request.POST['date']
+       date1=parse_date(date)
+       date1=datetime.date(date1.year, date1.month, date1.day)
+       status= int(request.POST['status'])
+       arobj=att_record.objects.filter(emp_id=eid).get(date=date1)
+       arobj.status=status
+       arobj.save()
+       rlobj=employee.objects.get(eid=eid)
+       if status=='3':
+        rlobj.c_leave=rlobj.c_leave-1
+       elif status == '2':
+        rlobj.s_leave=rlobj.s_leave-1
+       elif status == '4':
+        rlobj.e_leave=rlobj.e_leave-1
+       #else:
+        #create log
+       rlobj.save()
+       return redirect(unauthorised)
+   
+
+
 
 @login_required(login_url='/adminlogin/')
 def adduser(request):

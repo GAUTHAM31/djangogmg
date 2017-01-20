@@ -35,6 +35,12 @@ urlpatterns = [
     url(r'^adminshome/',views.adminhome),
     url(r'^dailyreport/',views.dailyreport),
     url(r'^customreport/',views.customreport),
+    url(r'^edituser/',views.edituser),
+    url(r'^editsuccess/',views.editsuccess),
+    url(r'^adminapprove_leave/',views.adminapprove_leave),
+    url(r'^adminapprove_submit/',views.adminapproveselected),
+    url(r'^unauthorised/',views.unauthorised),
+    url(r'^editunauthorised/',views.editunauthorised),
     url(r'^addusermain/',views.addusermain),
     url(r'^adduser/',views.adduser),
     url(r'^addusersuccess/',views.addusersuccess)

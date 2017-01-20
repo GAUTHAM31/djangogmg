@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Report</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  var disabledDates = ['01/02/2017', '1/1/2017'];
+
+$(function(){
+
+    $('#datepicker').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {             
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate; 
+     }   
+
+});
+$(function(){
+
+    $('#datepicker2').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {             
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate; 
+     }   
+
+});
+  </script>
+  
+    <style type="text/css">
+     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
+    color: red;
+}
+.ui-datepicker-header
+  {
+    background: #4386f2;
+  }
+
+  </style>
+
+ 
+
+<head>
+	<title>edituser</title>
+</head>
+<body>
+welcome admin
+
+<form class="selecteid" method="post" action="/edituser/">
+{% csrf_token %}
+eid:<input type="text" name="eid" >
+<button>Send</button>
+</form>
+
+<form class="edit" method="post" action="/editsuccess/">
+{% csrf_token %}
+<input type="hidden" name="eid" value="{{det.eid}}"/>
+first name:<input type="text" name="fn" value= " {{det.fname}}" />
+last name:<input type="text" name="ln" value="{{det.lname}}"/>
+email:<input type="text" name="email" value="{{det.user.email}}"/>
+<p>Datejd: <input type="text" id="datepicker" name="jd" required="true" value="{{det.j_date}}"></p><br/>
+<p>Datetd: <input type="text" id="datepicker2" name="td" required="true" value="{{det.t_date}}"></p><br/>
+<button>Send</button>
+</form>
+
+</body>
+</html>

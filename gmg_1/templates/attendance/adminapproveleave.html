@@ -23,9 +23,9 @@ welcome
             <td>approved</td>
         {% else %}
             <td>
-                <form action="/approve_submit/" method="post">
+                <form action="/adminapprove_submit/" method="post">
                 {% csrf_token %}
-                <input type="hidden" value="{{ item.l_id }}" name="l_id"/>
+                <input type="hidden" value={{ item.l_id }} name="l_id"/>
                 <input type="submit" class="btn" value=Approve name="mybtn">
                 </form>
             </td>

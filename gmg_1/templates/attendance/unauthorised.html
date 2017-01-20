@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> unauthorised absence </title>
+</head> 
+<body>
+welcome 
+<table style="width:100%">
+  <tr>
+    <th>eid</th>
+    <th>date</th> 
+    <th>approve</th>
+  </tr>
+    {% for item in ulist %}
+       <tr>
+        <td>{{ item.emp_id }}</td>
+        <td>{{ item.date }}</td>
+        <!--if else is byproduct of shoddy copy paste. code reusablity ftw! -->
+        {% if item.confirmation == 1 %}
+            <td>approved</td>
+        {% else %}
+            <td>
+                <form action="/editunauthorised/" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ item.emp_id }}" name="emp_id"/>
+                <input type="hidden" value="{{ item.date }}" name="date"/>
+                <select name="status">
+                <option value="2">Sick Leave</option>
+                <option value="3">Casual Leave</option>
+                <option value="4">Earned Leave</option>
+                <option value="5">Present</option>
+                </select>
+                <input type="submit" class="btn" value=Change name="mybtn">
+                </form>
+            </td>
+        {% endif %}
+       </tr>
+    {% endfor %}
+</table>
+<a href="/home/">go back home</a>
+
+
+</body>
+</html>
