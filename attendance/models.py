@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
-import datetime
+import datetime 
 
 # Create your models here.
 class employee(models.Model):
@@ -41,8 +41,8 @@ class r_leave(models.Model):
 class att_record(models.Model):
 	emp_id = models.IntegerField()
 	date = models.DateField()
-	status_type=((0,'A'),(1,'P'),(2,'SL'),(3,'CL'),(4,'EL'),(5,'PC'))
-	status=models.IntegerField(choices=status_type,default=0)
+	status_type=((-1,'T'),(0,'A'),(1,'P'),(2,'SL'),(3,'CL'),(4,'EL'),(5,'PC'))
+	status=models.IntegerField(choices=status_type,default=-1)
 	time_in=models.DateTimeField()
 	time_out=models.DateTimeField()
 
