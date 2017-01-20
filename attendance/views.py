@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from attendance.models import employee, r_leave , public_holidays ,admins, managedby
+from attendance.models import employee, r_leave , public_holidays ,admins, managedby, att_record
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from dateutil.parser import parse as parse_date
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth import logout
+from datetime import timedelta, date
 import teste
 import numpy as np
 import datetime 
@@ -72,6 +73,7 @@ def approveselected(request):
        rlobj.confirmation=1
        rlobj.save()
        return redirect(approve_leave)
+
 @login_required
 def l_request(request):
 	emp = employee.objects.get(user=request.user)
@@ -177,6 +179,13 @@ def logoutf(request):
 	logout(request)
 	return redirect(index)
 
+
+
+#-----------------------------------------------------------------------------------------------------
+#------------------------------------------ADMIN VIEW-------------------------------------------------
+#-----------------------------------------------------------------------------------------------------
+
+
 def adminl(request):
 	return render(request,'attendance/adminlogin.html',{})
 
@@ -191,17 +200,83 @@ def admincheck(request):
 		except admins.DoesNotExist:
 			admin=None
 		if admin:
-			return HttpResponse("hey admin")#put redirect home address for admin later
+			login(request,user)
+			return redirect(adminhome)#put redirect home address for admin later
 		else:
 			return redirect(adminl)
 
 	else:
 			return redirect(adminl)#put correct redirect later
+@login_required(login_url='/adminlogin/')
+def adminhome(request):
+    admin = admins.objects.get(user=request.user)
+    return render(request,'attendance/adminhome.html',{})
 
+@login_required(login_url='/adminlogin/')
+def dailyreport(request):
+    if request.method == 'POST':
+       dailyatt = list(att_record.objects.filter(date=request.post['date']))
+       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+    else:
+       dailyatt = list()
+       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+
+@login_required(login_url='/adminlogin/')
+def dailyreport(request):
+    if request.method == 'POST':
+       date1=request.POST['datef']
+       #converting date from unicode to date---------------------
+       date1=parse_date(date1)
+       date1=datetime.date(date1.year, date1.month, date1.day)    
+       dailyatt = list(att_record.objects.filter(date=date1))
+       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+    else:
+       dailyatt = list()
+       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+
+
+
+@login_required(login_url='/adminlogin/')
+def customreport(request):
+    if request.method == 'POST':
+        date1=request.POST['datef']
+        date2=request.POST['datet']
+        #converting date from unicode to date---------------------
+        date1=parse_date(date1)
+        date2=parse_date(date2)
+        date1=datetime.date(date1.year, date1.month, date1.day)
+        date2=datetime.date(date2.year, date2.month, date2.day)
+        #to count no of days---------------------------------------
+
+        customattlist=list()
+        def daterange(start_date, end_date):
+            for n in range(int ((end_date - start_date).days)):
+                yield start_date + timedelta(n)
+
+        #for DATE in daterange(date1, date2):
+        #samples = Sample.objects.filter(sampledate__gte=datetime.date(2011, 1, 1),
+                                #sampledate__lte=datetime.date(2011, 1, 31))
+        dayatt1=att_record.objects.all().filter(date__gte=date1)
+        dayatt=dayatt1.filter(date__lte=date2)
+            #dayatt=list(dayatt1)
+            #customattlist.append(dayatt)
+        return render(request,'attendance/customreport.html',{'clist':dayatt})
+    else:
+        customattlist=list()
+        return render(request,'attendance/customreport.html',{'clist':dayatt})
+        
+        
+
+
+       
+    
+    
+@login_required(login_url='/adminlogin/')
 def addusermain(request):
 	return render(request,'attendance/adduser.html',{})
+    
 
-
+@login_required(login_url='/adminlogin/')
 def adduser(request):
     if request.method == 'POST':
         query_dict = request.POST
@@ -219,9 +294,11 @@ def adduser(request):
         return redirect(addusersuccess)
     else:
     	return redirect(addusermain)
-
+@login_required(login_url='/adminlogin/')
 def addusersuccess(request):
 	return HttpResponse("sucess")
+
+
 
 
 

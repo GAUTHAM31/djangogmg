@@ -2,7 +2,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Leave Request</title>
+  <title>Custom Report</title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -68,15 +68,30 @@ $(function(){
  
 </head>
 <body>
-<form class="lrequest" method="post" action="/lrequestConfirmed/">
+<form class="daily" method="post" action="/customreport/">
 {% csrf_token %}
-<p>Date From: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
-<p>Date To: <input type="text" id="datepicker2" name="datet" required="true"></p><br/>
-<p>Type:</p><input type="radio" name="type" value="CL" checked> Casual leave<br>
- <input type="radio" name="type" value="CL" > Sick Leave<br>
-<p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
+<p>Datefrom: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
+<p>Dateto: <input type="text" id="datepicker2" name="datet" required="true"></p><br/>
+
 <button>Send</button>
  </form>
+
+<table style="width:100%">
+  <tr>
+    <th>eid</th>
+    <th>status</th> 
+    <th>timein</th>
+    <th>timeout</th>
+  </tr>
+    {% for item in clist %}
+       <tr>
+        <td>{{ item.emp_id }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.time_in }}</td>
+        <td>{{ item.time_out }}</td>
+       </tr>
+    {% endfor %}
+</table>
  
 </body>
 </html>
