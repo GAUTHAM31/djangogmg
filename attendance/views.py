@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from attendance.models import employee, r_leave , public_holidays ,admins, managedby, att_record
+from attendance.models import employee, r_leave , public_holidays ,admins, managedby, att_record, editlogs
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -245,6 +245,7 @@ def dailyreport(request):
 
 @login_required(login_url='/adminlogin/')
 def customreport(request):
+    dayatt=list()
     if request.method == 'POST':
         date1=request.POST['datef']
         date2=request.POST['datet']
@@ -337,10 +338,16 @@ def unauthorised(request):
     ulist=att_record.objects.filter(status=0)
     return render(request,'attendance/unauthorised.html',{'ulist':ulist})
 
+def insertlog(admin_id,logdata,logdate):
+    new_log= editlogs(admin_id=admin_id,logdata=logdata,logdate=logdate)
+    new_log.save()
+
 @login_required(login_url='/adminlogin/')
 def editunauthorised(request):
     if request.method == 'POST':
        eid= request.POST['emp_id']
+       admin_id=admins.objects.get(user=request.user).admin_id
+       logdate=datetime.datetime.now()
        date= request.POST['date']
        date1=parse_date(date)
        date1=datetime.date(date1.year, date1.month, date1.day)
@@ -351,12 +358,16 @@ def editunauthorised(request):
        rlobj=employee.objects.get(eid=eid)
        if status=='3':
         rlobj.c_leave=rlobj.c_leave-1
+        logdata='Alloted casual leave to'+employee.objects.get(eid=eid).fname+' on '+date
        elif status == '2':
         rlobj.s_leave=rlobj.s_leave-1
+        logdata='Alloted sick leave to'+employee.objects.get(eid=eid).fname+' on '+date
        elif status == '4':
         rlobj.e_leave=rlobj.e_leave-1
-       #else:
-        #create log
+        logdata='Alloted earned leave to'+employee.objects.get(eid=eid).fname+' on '+date
+       else:
+        logdata='Corrected absence to present for '+employee.objects.get(eid=eid).fname+' on '+date
+       insertlog(admin_id,logdata,logdate)
        rlobj.save()
        return redirect(unauthorised)
    
@@ -383,10 +394,12 @@ def adduser(request):
     	return redirect(addusermain)
 @login_required(login_url='/adminlogin/')
 def addusersuccess(request):
-	return HttpResponse("sucess")
+	return HttpResponse("success")
 
-
-
+@login_required(login_url='/adminlogin/')
+def viewlogs(request):
+    loglist=list(editlogs.objects.filter())
+    return render(request,'attendance/logs.html',{'loglist':loglist})
 
 
 

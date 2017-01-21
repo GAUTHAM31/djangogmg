@@ -1,4 +1,4 @@
-"""gmg_1 URL Configuration
+"""gmg_1 Configuration URL
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.9/topics/http/urls/
@@ -43,5 +43,6 @@ urlpatterns = [
     url(r'^editunauthorised/',views.editunauthorised),
     url(r'^addusermain/',views.addusermain),
     url(r'^adduser/',views.adduser),
-    url(r'^addusersuccess/',views.addusersuccess)
+    url(r'^addusersuccess/',views.addusersuccess),
+    url(r'^logs/',views.viewlogs)
 ]

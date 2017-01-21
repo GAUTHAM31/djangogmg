@@ -46,10 +46,11 @@ class att_record(models.Model):
 	time_in=models.DateTimeField(null=True)
 	time_out=models.DateTimeField(null=True)
 
-class log():
+class editlogs(models.Model):
     logid=models.AutoField(primary_key=True)
     admin_id = models.IntegerField()
     logdata= models.TextField()
+    logdate= models.DateTimeField(null=True)
 
 
 class public_holidays(models.Model):
