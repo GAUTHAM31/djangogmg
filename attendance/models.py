@@ -43,8 +43,8 @@ class att_record(models.Model):
 	date = models.DateField()
 	status_type=((-1,'T'),(0,'A'),(1,'P'),(2,'SL'),(3,'CL'),(4,'EL'),(5,'PC'))
 	status=models.IntegerField(choices=status_type,default=-1)
-	time_in=models.DateTimeField()
-	time_out=models.DateTimeField()
+	time_in=models.DateTimeField(null=True)
+	time_out=models.DateTimeField(null=True)
 
 class log():
 	admin_id = models.IntegerField()
