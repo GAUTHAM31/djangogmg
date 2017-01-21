@@ -47,8 +47,9 @@ class att_record(models.Model):
 	time_out=models.DateTimeField(null=True)
 
 class log():
-	admin_id = models.IntegerField()
-	logdata= models.TextField()
+    logid=models.AutoField(primary_key=True)
+    admin_id = models.IntegerField()
+    logdata= models.TextField()
 
 
 class public_holidays(models.Model):
