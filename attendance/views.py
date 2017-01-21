@@ -345,9 +345,11 @@ def insertlog(admin_id,logdata,logdate):
 @login_required(login_url='/adminlogin/')
 def editunauthorised(request):
     if request.method == 'POST':
+       flag=1
        eid= request.POST['emp_id']
        admin_id=admins.objects.get(user=request.user).admin_id
        logdate=datetime.datetime.now()
+       reason1= request.POST['reason1']
        date= request.POST['date']
        date1=parse_date(date)
        date1=datetime.date(date1.year, date1.month, date1.day)
@@ -356,18 +358,25 @@ def editunauthorised(request):
        arobj.status=status
        arobj.save()
        rlobj=employee.objects.get(eid=eid)
-       if status=='3':
+       if status==3:
         rlobj.c_leave=rlobj.c_leave-1
         logdata='Alloted casual leave to'+employee.objects.get(eid=eid).fname+' on '+date
-       elif status == '2':
+        ltype='CL'
+       elif status == 2:
         rlobj.s_leave=rlobj.s_leave-1
         logdata='Alloted sick leave to'+employee.objects.get(eid=eid).fname+' on '+date
-       elif status == '4':
+        ltype='SL'
+       elif status == 4:
         rlobj.e_leave=rlobj.e_leave-1
         logdata='Alloted earned leave to'+employee.objects.get(eid=eid).fname+' on '+date
+        ltype='EL'
        else:
+        flag=0
         logdata='Corrected absence to present for '+employee.objects.get(eid=eid).fname+' on '+date
        insertlog(admin_id,logdata,logdate)
+       if flag == 1:
+            b=r_leave(emp_id=rlobj,date1=date1,l_type=ltype,reason=reason1,confirmation=1)
+            b.save()
        rlobj.save()
        return redirect(unauthorised)
    
