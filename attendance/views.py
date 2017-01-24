@@ -30,8 +30,11 @@ def logina(request):
 		username = request.POST['username']
 		password = request.POST['password']
 		user = authenticate(username=username,password=password)
-		
-		if user:
+		try:
+			empl=employee.objects.get(user=user)
+		except employee.DoesNotExist:
+			empl=None
+		if empl:
 			if user.is_active:
 				login(request,user)
 				return redirect(home)
@@ -45,26 +48,40 @@ def logina(request):
 
 @login_required
 def home(request):
-	emp = employee.objects.get(user=request.user)
-	return render(request,'attendance/home.html',{'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave})
-    
+    try:
+        emp = employee.objects.get(user=request.user)
+    except employee.DoesNotExist:
+        emp=None
+    slt=r_leave.objects.filter(l_type='SL').filter(emp_id=emp).count()
+    clt=r_leave.objects.filter(l_type='CL').filter(emp_id=emp).count()
+    elt=r_leave.objects.filter(l_type='EL').filter(emp_id=emp).count()
+    if emp:
+        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt})
+    else:
+        return redirect(adminhome)
 
 @login_required
 def overview(request):
-    emp = employee.objects.get(user=request.user)
-    rl = list(r_leave.objects.filter(emp_id=emp))
-    return render(request,'attendance/overview.html',{'rlist':rl})
+    try:
+        emp = employee.objects.get(user=request.user)
+    except employee.DoesNotExist:
+        return redirect(adminhome)
+    if emp:
+        rl = list(r_leave.objects.filter(emp_id=emp))
+        return render(request,'attendance/overview.html',{'rlist':rl})
 
 @login_required
 def approve_leave(request):
-    emp = employee.objects.get(user=request.user)
-    ml = list(managedby.objects.filter(mid=emp.eid))
-    rl = list()
-    for item in ml:
-         l1 = list(r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0))
-        
-         rl.extend(l1)
-    return render(request,'attendance/approve_leave.html',{'rlist':rl})
+    try:
+        emp = employee.objects.get(user=request.user)
+        ml = list(managedby.objects.filter(mid=emp.eid))
+        rl = list()
+        for item in ml:
+            l1 = list(r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0))
+            rl.extend(l1)
+        return render(request,'attendance/approve_leave.html',{'rlist':rl})
+    except employee.DoesNotExist:
+        return redirect(adminhome)  
 @login_required
 def approveselected(request):
     if request.method == 'POST':
@@ -72,19 +89,16 @@ def approveselected(request):
        rlobj=r_leave.objects.get(l_id=lrid)
        rlobj.confirmation=1
        rlobj.save()
-       #if rlobj.l_type =='CL':
-       # rlobj.emp_id.c_leave=rlobj.emp_id.c_leave-1
-       #elif rlobj.l_type == 'SL':
-       # rlobj.emp_id.s_leave=rlobj.emp_id.s_leave-1
-       #else:
-       # rlobj.emp_id.e_leave=rlobj.emp_id.e_leave-1
-       #rlobj.emp_id.save()
        return redirect(approve_leave)
+    
 
 @login_required
 def l_request(request):
-	emp = employee.objects.get(user=request.user)
-	return render(request,'attendance/lrequest.html',{'employee':emp})
+    try:
+	    emp = employee.objects.get(user=request.user)
+	    return render(request,'attendance/lrequest.html',{'employee':emp})
+    except employee.DoesNotExist:
+        return redirect(adminhome)
 
 
 @login_required
@@ -214,13 +228,20 @@ def admincheck(request):
 
 	else:
 			return redirect(adminl)#put correct redirect later
-@login_required(login_url='/adminlogin/')
+@login_required(login_url='/admins/')
 def adminhome(request):
-    admin = admins.objects.get(user=request.user)
-    return render(request,'attendance/adminhome.html',{})
+    try:
+        admin = admins.objects.get(user=request.user)
+        return render(request,'attendance/adminhome.html',{})
+    except admins.DoesNotExist:
+        return redirect(home)
 
 @login_required(login_url='/adminlogin/')
 def dailyreport(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
        dailyatt = list(att_record.objects.filter(date=request.post['date']))
        return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
@@ -230,6 +251,10 @@ def dailyreport(request):
 
 @login_required(login_url='/adminlogin/')
 def dailyreport(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
        date1=request.POST['datef']
        #converting date from unicode to date---------------------
@@ -245,6 +270,10 @@ def dailyreport(request):
 
 @login_required(login_url='/adminlogin/')
 def customreport(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     dayatt=list()
     if request.method == 'POST':
         date1=request.POST['datef']
@@ -274,10 +303,18 @@ def customreport(request):
         return render(request,'attendance/customreport.html',{'clist':dayatt})    
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
 	return render(request,'attendance/adduser.html',{})
 
 @login_required(login_url='/adminlogin/')
 def edituser(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     details=list()
     if request.method=='POST':
         eid=request.POST['eid']
@@ -289,11 +326,14 @@ def edituser(request):
 
 @login_required(login_url='/adminlogin/')
 def editsuccess(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)    
     rm=request.POST
     eid=rm['eid']
     fn=rm['fn']
     ln=rm['ln']
-    #d=rm['d']
     jd=rm['jd']
     td=rm['td']
     email=rm['email']
@@ -313,12 +353,20 @@ def editsuccess(request):
 
 @login_required(login_url='/adminlogin/')
 def adminapprove_leave(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     l1 = list(r_leave.objects.filter(confirmation=0))
     return render(request,'attendance/adminapproveleave.html',{'rlist':l1})
 
 
 @login_required(login_url='/adminlogin/')
 def adminapproveselected(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
        lrid= request.POST['l_id']
        rlobj=r_leave.objects.get(l_id=lrid)
@@ -335,15 +383,27 @@ def adminapproveselected(request):
 
 @login_required(login_url='/adminlogin/')
 def unauthorised(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     ulist=att_record.objects.filter(status=0)
     return render(request,'attendance/unauthorised.html',{'ulist':ulist})
 
 def insertlog(admin_id,logdata,logdate):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     new_log= editlogs(admin_id=admin_id,logdata=logdata,logdate=logdate)
     new_log.save()
 
 @login_required(login_url='/adminlogin/')
 def editunauthorised(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
        flag=1
        eid= request.POST['emp_id']
@@ -382,6 +442,10 @@ def editunauthorised(request):
 
 @login_required(login_url='/adminlogin/')
 def addotherleave(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
         eid=request.POST['eid']
         jd=request.POST['date1']
@@ -403,8 +467,13 @@ def addotherleave(request):
 
 @login_required(login_url='/adminlogin/')
 def adduser(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
     if request.method == 'POST':
         query_dict = request.POST
+        eid= query_dict['eid']
         username = query_dict['username']
         email = query_dict['email']
        	password = query_dict['password']
@@ -414,21 +483,74 @@ def adduser(request):
         new_user = User.objects.create_user(username,email,password)
         new_user.save()
         emp=User.objects.get(username=username)
-        p=employee(user=emp,fname=fname,lname=lname,eid='52187612')
+        p=employee(user=emp,fname=fname,lname=lname,eid=eid)
         p.save()
         return redirect(addusersuccess)
     else:
     	return redirect(addusermain)
+
+
 @login_required(login_url='/adminlogin/')
 def addusersuccess(request):
 	return HttpResponse("success")
 
-
+@login_required(login_url='/adminlogin/')
+def editmanagers(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
+    manlist=list()
+    if request.method == 'POST':
+        user=request.POST['emp_id']
+        details=employee.objects.get(eid=user)
+        managers=list(managedby.objects.filter(eid=employee.objects.get(eid=user)))
+        for item in managers:
+            ml=list(employee.objects.filter(eid=item.mid))
+            manlist.extend(ml)
+        return render(request,'attendance/editmanager.html',{'det':manlist,'eid':user})
+    #elif
+     #   return render(request,'attendance/editmanager.html',{'det':manlist,})
+    else:
+        return render(request,'attendance/editmanager.html',{'det':manlist,})
 
 @login_required(login_url='/adminlogin/')
-def viewlogs(request):
-    loglist=list(editlogs.objects.filter())
-    return render(request,'attendance/logs.html',{'loglist':loglist})
+def editsuccess(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)    
+    rm=request.POST
+    eid=rm['eid']
+    fn=rm['fn']
+    ln=rm['ln']
+    jd=rm['jd']
+    td=rm['td']#add handlers to remove dependencies for the employee that was deleted like removing him from managers
+    email=rm['email']
+    date1=parse_date(jd)
+    date2=parse_date(td)
+    date1=datetime.date(date1.year, date1.month, date1.day)
+    date2=datetime.date(date2.year, date2.month, date2.day)
+    emp=employee.objects.get(eid=eid)
+    emp.fname=fn
+    emp.lname=ln
+    #emp.dept=d
+    emp.j_date=date1
+    emp.t_date=date2
+    emp.user.email=email
+    emp.save();
+    return render(request, 'attendance/editsuccess.html',{})
 
+
+
+
+@login_required(login_url='/admins/')
+def viewlogs(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+        loglist=list(editlogs.objects.filter())
+        return render(request,'attendance/logs.html',{'loglist':loglist})
+    except admins.DoesNotExist:
+        return redirect(home)
 
 
