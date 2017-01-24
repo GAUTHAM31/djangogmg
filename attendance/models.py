@@ -32,12 +32,12 @@ class r_leave(models.Model):
     date1 = models.DateField()#leave period start
     #date2 = models.DateField()#leave period end
     #no_of_days=models.IntegerField(default=0)
-    leave_type_choice=(('SL','sick leave'),('CL','Casaul leave'),('EL','Earned Leave'))
+    leave_type_choice=(('SL','sick leave'),('CL','Casaul leave'),('EL','Earned Leave'),('OL','Other Leave'))
     l_type = models.CharField(max_length=10,choices=leave_type_choice,default='CL')
     reason = models.CharField(max_length=100)
     confirmation=models.IntegerField(default=0)
     l_id = models.AutoField(primary_key=True)
-
+    
 class att_record(models.Model):
 	emp_id = models.IntegerField()
 	date = models.DateField()

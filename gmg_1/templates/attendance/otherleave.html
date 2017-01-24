@@ -2,7 +2,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Leave Request</title>
+  <title>Other Leave Allotment</title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -68,37 +68,17 @@ $(function(){
  
 </head>
 <body>
-<form class="daily" method="post" action="/dailyreport/">
+<form class="lrequest" method="post" action="/addotherleave/">
 {% csrf_token %}
-<p>Date: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
-
+<p>Eid: <input type="text" name="eid" required="true"></p>><br/>
+<p>Date From: <input type="text" id="datepicker" name="date1" required="true"></p><br/>
+<p>Date To: <input type="text" id="datepicker2" name="date2" required="true"></p><br/>
+<p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
 <button>Send</button>
  </form>
-
-<table style="width:100%">
-  <tr>
-    <th>eid</th>
-    <th>status</th> 
-    <th>timein</th>
-    <th>timeout</th>
-  </tr>
-    {% for item in dalist %}
-       <tr>
-        <td>{{ item.emp_id }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.time_in }}</td>
-        <td>{{ item.time_out }}</td>
-       </tr>
-    {% endfor %}
-</table>
- <a href="/dailyreport/">daily report</a>
-<a href="/customreport/">custom report</a>
-<a href="/adminapprove_leave/">approve leaves</a>
-<a href="/unauthorised/">edit unauthorized</a>
-<a href="/grant other leave/">grant other leave</a>
-<a href="/adduser/">add new employee</a>
+ <a href="/lrequest/">leave request</a>
 <a href="/logout/">logout</a>
-<a href="/edituser/">edit employees </a>
-<a href="/logs/">logs</a>
+<a href="/overview/">overview</a>
+<a href="/approve_leave/">approve leave</a>
 </body>
 </html>

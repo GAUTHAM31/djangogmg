@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^adminapprove_submit/',views.adminapproveselected),
     url(r'^unauthorised/',views.unauthorised),
     url(r'^editunauthorised/',views.editunauthorised),
+    url(r'^addotherleave/',views.addotherleave),
     url(r'^addusermain/',views.addusermain),
     url(r'^adduser/',views.adduser),
     url(r'^addusersuccess/',views.addusersuccess),

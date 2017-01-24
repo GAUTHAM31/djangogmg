@@ -379,9 +379,27 @@ def editunauthorised(request):
             b.save()
        rlobj.save()
        return redirect(unauthorised)
-   
 
-
+@login_required(login_url='/adminlogin/')
+def addotherleave(request):
+    if request.method == 'POST':
+        eid=request.POST['eid']
+        jd=request.POST['date1']
+        td=request.POST['date2']
+        date1=parse_date(jd)
+        date2=parse_date(td)
+        date1=datetime.date(date1.year, date1.month, date1.day)
+        date2=datetime.date(date2.year, date2.month, date2.day)
+        reason=request.POST['reason']
+        #loop from date1 to date2
+        while date1 <= date2:    
+            emp=employee.objects.get(eid=eid)
+            b=r_leave(emp_id=emp,date1=date1,l_type='OL',reason=reason,confirmation=1)
+            b.save()
+            date1 += datetime.timedelta(days=1)
+        return redirect(adminhome)
+    else:
+        return render(request,'attendance/otherleave.html',{})
 
 @login_required(login_url='/adminlogin/')
 def adduser(request):
@@ -404,6 +422,8 @@ def adduser(request):
 @login_required(login_url='/adminlogin/')
 def addusersuccess(request):
 	return HttpResponse("success")
+
+
 
 @login_required(login_url='/adminlogin/')
 def viewlogs(request):
