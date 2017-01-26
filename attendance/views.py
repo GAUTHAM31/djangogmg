@@ -13,7 +13,7 @@ from django.contrib.auth import logout
 from datetime import timedelta, date
 import teste
 import numpy as np
-import datetime 
+import datetime
 import hashtest
 
 
@@ -81,7 +81,7 @@ def approve_leave(request):
             rl.extend(l1)
         return render(request,'attendance/approve_leave.html',{'rlist':rl})
     except employee.DoesNotExist:
-        return redirect(adminhome)  
+        return redirect(adminhome)
 @login_required
 def approveselected(request):
     if request.method == 'POST':
@@ -90,7 +90,7 @@ def approveselected(request):
        rlobj.confirmation=1
        rlobj.save()
        return redirect(approve_leave)
-    
+
 
 @login_required
 def l_request(request):
@@ -160,7 +160,7 @@ def send(request):
     cursor: pointer;
 }
 
-.button2 {background-color: #008CBA;} 
+.button2 {background-color: #008CBA;}
 </style>
 </head>
 <body>Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reason1+"""
@@ -170,11 +170,11 @@ def send(request):
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
         #add default email here if necessary
-		to = managedby.objects.all().filter(eid=emp.eid)
+		to = managedby.objects.all().filter(eid=emp)
 		FROM ='test4generalpurpose@gmail.com'
 		for TO in to:
 			mm=employee.objects.get(eid=TO.mid)
-			teste.py_mail("Leave Request", email_content, mm.email, FROM)
+			teste.py_mail("Leave Request", email_content, mm.user.email, FROM)
 		return redirect('/confirmation/')
 	else:
 		return redirect('/lrequest/')
@@ -259,7 +259,7 @@ def dailyreport(request):
        date1=request.POST['datef']
        #converting date from unicode to date---------------------
        date1=parse_date(date1)
-       date1=datetime.date(date1.year, date1.month, date1.day)    
+       date1=datetime.date(date1.year, date1.month, date1.day)
        dailyatt = list(att_record.objects.filter(date=date1))
        return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
     else:
@@ -300,7 +300,7 @@ def customreport(request):
         return render(request,'attendance/customreport.html',{'clist':dayatt})
     else:
         customattlist=list()
-        return render(request,'attendance/customreport.html',{'clist':dayatt})    
+        return render(request,'attendance/customreport.html',{'clist':dayatt})
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
     try:
@@ -321,15 +321,15 @@ def edituser(request):
         details=employee.objects.get(eid=eid)
 
         return render(request,'attendance/edituser.html',{'det':details})
-    else: 
-        return render(request,'attendance/edituser.html',{'det':details})    
+    else:
+        return render(request,'attendance/edituser.html',{'det':details})
 
 @login_required(login_url='/adminlogin/')
 def editsuccess(request):
     try:
         admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
-        return redirect(home)    
+        return redirect(home)
     rm=request.POST
     eid=rm['eid']
     fn=rm['fn']
@@ -456,7 +456,7 @@ def addotherleave(request):
         date2=datetime.date(date2.year, date2.month, date2.day)
         reason=request.POST['reason']
         #loop from date1 to date2
-        while date1 <= date2:    
+        while date1 <= date2:
             emp=employee.objects.get(eid=eid)
             b=r_leave(emp_id=emp,date1=date1,l_type='OL',reason=reason,confirmation=1)
             b.save()
@@ -537,15 +537,15 @@ def addmanagers(request):
         p=managedby(eid=employee.objects.get(eid=eid),mid=mid)
         p.save()
     return render(request,'attendance/addmanager.html',{})
-    
-    
+
+
 
 @login_required(login_url='/adminlogin/')
 def editsuccess(request):
     try:
         admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
-        return redirect(home)    
+        return redirect(home)
     rm=request.POST
     eid=rm['eid']
     fn=rm['fn']
@@ -578,5 +578,3 @@ def viewlogs(request):
         return render(request,'attendance/logs.html',{'loglist':loglist})
     except admins.DoesNotExist:
         return redirect(home)
-
-
