@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+ <form class="addmananger form" method="post" action="/addmanager/">
+    {% csrf_token %}
+      <input type="text" name="eid" placeholder="eid"/>
+      <input type="text" name="mid" placeholder="mid"/>
+      <button>ADD</button>
+
+    </form>
+
+
+
+</body>
+</html>

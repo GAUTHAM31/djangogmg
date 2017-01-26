@@ -45,7 +45,8 @@ urlpatterns = [
     url(r'^addusermain/',views.addusermain),
     url(r'^adduser/',views.adduser),
     url(r'^addusersuccess/',views.addusersuccess),
+    url(r'^deletemanager/',views.deletemanager),
     url(r'^editmanager/',views.editmanagers),
-    #url(r'^editmanager/',views.deletemanagers),
+    url(r'^addmanager/',views.addmanagers),
     url(r'^logs/',views.viewlogs)
 ]

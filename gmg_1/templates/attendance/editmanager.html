@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>edit manager</title>
+</head>
+<body>
+welcome 
+<table style="width:100%">
+<form action="/editmanager/" method="post">
+{% csrf_token %}
+<input type="text" name="emp_id"/>
+<input type="submit"class="btn" name="search">
+</form><br/>
+  <tr>
+    <th>MID</th> 
+    <th>FNAME</th>
+    <th>LNAME</th>
+    <th>DELETE</th>
+  </tr>
+    {% for item in manlist %}
+       <tr>
+        <td>{{ item.eid }}</td>
+        <td>{{ item.fname }}</td>
+        <td>{{ item.lname }}</td>
+            <td>
+                <form action="/deletemanager/" method="post">
+                {% csrf_token %}
+                <input type="hidden" value={{ eid }} name="eid"/>
+                <input type="hidden" value={{ item.eid }} name="mid"/>
+                <input type="submit" class="btn" value=DELETE name="mybtn">
+                </form>
+            </td>
+       </tr>
+    {% endfor %}
+
+</table>
+<a href="/adminshome/">go back home</a>
+<a href="/dailyreport/">daily report</a>
+<a href="/customreport/">custom report</a>
+<a href="/adminapprove_leave/">approve leaves</a>
+<a href="/unauthorised/">edit unauthorized</a>
+<a href="/grant other leave/">grant other leave</a>
+<a href="/adduser/">add new employee</a>
+<a href="/logout/">logout</a>
+<a href="/edituser/">edit employees </a>
+<a href="/logs/">logs</a>
+
+
+</body>
+</html>

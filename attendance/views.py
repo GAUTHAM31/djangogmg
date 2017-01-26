@@ -508,11 +508,37 @@ def editmanagers(request):
         for item in managers:
             ml=list(employee.objects.filter(eid=item.mid))
             manlist.extend(ml)
-        return render(request,'attendance/editmanager.html',{'det':manlist,'eid':user})
-    #elif
-     #   return render(request,'attendance/editmanager.html',{'det':manlist,})
+        return render(request,'attendance/editmanager.html',{'manlist':manlist,'eid':user})
     else:
         return render(request,'attendance/editmanager.html',{'det':manlist,})
+
+
+@login_required(login_url='/adminlogin/')
+def deletemanager(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
+    if request.method == 'POST':
+        mid=request.POST['mid']
+        eid=request.POST['eid']
+        managedby.objects.filter(eid=employee.objects.filter(eid=eid)).filter(mid=mid).delete()
+        return redirect(editmanagers)
+
+@login_required(login_url='/adminlogin/')
+def addmanagers(request):
+    try:
+        admin = admins.objects.get(user=request.user)
+    except admins.DoesNotExist:
+        return redirect(home)
+    if request.method=='POST':
+        eid=request.POST['eid']
+        mid=request.POST['mid']
+        p=managedby(eid=employee.objects.get(eid=eid),mid=mid)
+        p.save()
+    return render(request,'attendance/addmanager.html',{})
+    
+    
 
 @login_required(login_url='/adminlogin/')
 def editsuccess(request):
