@@ -1,7 +1,6 @@
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends 'attendance/base.html' %}
+{% load staticfiles %}
+{% block header %}
   <title>Leave Request</title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
@@ -65,9 +64,10 @@ $(function(){
 
   </style>
 
- 
-</head>
-<body>
+{% endblock %} 
+
+{% block content %}
+
 <form class="lrequest" method="post" action="/lrequestConfirmed/">
 {% csrf_token %}
 <p>Date From: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
@@ -77,9 +77,5 @@ $(function(){
 <p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
 <button>Send</button>
  </form>
- <a href="/lrequest/">leave request</a>
-<a href="/logout/">logout</a>
-<a href="/overview/">overview</a>
-<a href="/approve_leave/">approve leave</a>
-</body>
-</html>
+ 
+{% endblock %}

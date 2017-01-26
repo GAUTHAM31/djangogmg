@@ -1,35 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>welcome</title>
-</head>
-<body>
-welcome 
-<table style="width:100%">
-  <tr>
+
+{% extends 'attendance/base.html' %}
+{% load staticfiles %}
+{% block header %}
+  <title>Overview</title>
+{% endblock %}
+
+
+{% block content %}
+  <div class="table-responsive">          
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
     <th>Leave Type</th>
     <th>Date</th> 
     <th>Reason</th>
     <th>Status</th>
-  </tr>
-    {% for item in rlist %}
-       <tr>
-        <td>{{ item.l_type }}</td>
-        <td>{{ item.date1 }}</td>
-        <td>{{ item.reason }}</td>
+      </tr>
+    </thead>
+    <tbody>
+ {% for item in rlist %}
+      <tr >
+        <td class="text-left">{{ item.l_type }}</td>
+        <td class="text-left">{{ item.date1 }}</td>
+        <td class="text-left">{{ item.reason }}</td>
         {% if item.confirmation == 1 %}
-            <td>approved</td>
+            <td class="text-left">approved</td>
         {% else %}
-            <td>pending</td>
+            <td class="text-left">pending</td>
         {% endif %}
-       </tr>
+      </tr>
     {% endfor %}
-</table>
-<a href="/home/">go back home</a>
-
-<a href="/lrequest/">leave request</a>
-<a href="/logout/">logout</a>
-<a href="/overview/">overview</a>
-<a href="/approve_leave/">approve leave</a>
-</body>
-</html>
+    </tbody>
+  </table>
+  </div>
+{% endblock %}
+                             

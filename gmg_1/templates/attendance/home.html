@@ -1,8 +1,74 @@
 {% extends 'attendance/base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+{% endblock %}
 {% block content %}
-welcome {{fname|capfirst}} {{lname|capfirst}}
-sl={{sl}}<br/>
-cl={{cl}}<br/>
-el={{el}}<br/>
+<style>
+  .bg-1 { 
+               width:100%;
+        }
+
+    .panel-default >.panel-heading#sl
+        {
+        	background-color: #6cd62a;
+        }
+    .panel-default >.panel-heading#cl
+        {
+        	background-color: #2acdd6;
+        }
+    .panel-default >.panel-heading#el
+        {
+        	background-color: #db0404;
+        }
+  </style>
+
+<div class="bg-1">
+  
+    <h1>Welcome {{fname|capfirst}} {{lname|capfirst}}</h1>
+    <img src="{% static 'octocat.jpg' %}" class="img-circle" alt="img" width="150" height="150">
+    <h3>Available</h3>
+ 
+</div>
+<div class="row">
+ <div class="col-sm-4">
+<div class="panel panel-default" >
+  <div class="panel-heading" id="sl"><font size="5" color="#383130"> SL</font>
+</div>
+  <div class="panel-body"><font size="5" >   {{sl}} </font> </div></div></div>
+
+<div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="cl"><font size="5" color="#383130">CL</font></div>
+  <div class="panel-body"><font size="5" >   {{cl}} </font> </div></div></div>
+
+  <div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="el"><font size="5" color="#383130">EL</font></div>
+  <div class="panel-body"><font size="5" >   {{el}} </font> </div></div></div>
+</div>
+
+<h3>Total Leaves Taken</h3>
+<div class="row">
+ <div class="col-sm-4">
+<div class="panel panel-default" >
+  <div class="panel-heading" id="sl"><font size="5" color="white"> SL</font>
+</div>
+  <div class="panel-body"><font size="5" >   {{slt}} </font> </div></div></div>
+
+<div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="cl"><font size="5" color="white">CL</font></div>
+  <div class="panel-body"><font size="5" >   {{clt}} </font> </div></div></div>
+
+  <div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="el"><font size="5" color="white">EL</font></div>
+  <div class="panel-body"><font size="5" >   {{elt}} </font> </div></div></div>
+</div>
+
+
+
+
 {% endblock %}
 
