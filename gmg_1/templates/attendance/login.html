@@ -3,11 +3,12 @@
 <html >
 <head>
   <meta charset="UTF-8">
-  <title>Flat HTML5/CSS3 Login Form</title>
-  
-  
-  
-      <link rel="stylesheet" href="{%static 'css/style.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Portal</title>
+  <link rel="stylesheet" href="{%static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   
 </head>
@@ -27,13 +28,15 @@
     </form>
     <form class="login-form" method="post" action="/login/">
     {% csrf_token %}
-      <input type="text" name="username" placeholder="username"/>
-      <input type="password" name="password" placeholder="password"/>
+      <input type="text" name="username" placeholder="Username"/>
+      <input type="password" name="password" placeholder="Password"/>
       <button>login</button>
     </form>
+<br/>
+<br/>
 
-      <a href="/adminlogin/"><button>ADMIN</button></a>
-      <p class="message">Forget password? <a href="#">Contact</a></p>
+     <a href="/adminlogin/" class="btn btn-danger" role="button">Admin</a>
+      <p class="message">Forget password? <a href="#" >Contact Admin</a></p>
   </div>
 </div>
 

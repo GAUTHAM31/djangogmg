@@ -19,7 +19,7 @@
     <img src="{%static 'good-methods-global.png' %}" />
     <br /><br />
     <form class="register-form" >
-      <input type="text" placeholder="name"/>
+      <input type="text" placeholder="Admin Name"/>
       <input type="password" placeholder="password"/>
       <input type="text" placeholder="email address"/>
       <button>create</button>
@@ -27,10 +27,10 @@
     </form>
     <form class="login-form" method="post" action="/admins/">
     {% csrf_token %}
-      <input type="text" name="username" placeholder="username"/>
+      <input type="text" name="username" placeholder="Admin Username"/>
       <input type="password" name="password" placeholder="password"/>
       <button>login</button>
-      <p class="message">Forget password? <a href="#">Contact</a></p>
+      <p class="message">Forget password? <a href="#">Contact Root</a></p>
     </form>
   </div>
 </div>

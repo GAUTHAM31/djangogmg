@@ -52,11 +52,15 @@ def home(request):
         emp = employee.objects.get(user=request.user)
     except employee.DoesNotExist:
         emp=None
-    slt=r_leave.objects.filter(l_type='SL').filter(emp_id=emp).count()
-    clt=r_leave.objects.filter(l_type='CL').filter(emp_id=emp).count()
-    elt=r_leave.objects.filter(l_type='EL').filter(emp_id=emp).count()
+    slt=r_leave.objects.filter(l_type='SL').filter(emp_id=emp).filter(confirmation=1).count()
+    clt=r_leave.objects.filter(l_type='CL').filter(emp_id=emp).filter(confirmation=1).count()
+    elt=r_leave.objects.filter(l_type='EL').filter(emp_id=emp).filter(confirmation=1).count()
+    ml = managedby.objects.filter(mid=emp.eid)
+    no_ap=0
+    for item in ml:
+            no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
     if emp:
-        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt})
+        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt,'no':no_ap})
     else:
         return redirect(adminhome)
 
@@ -66,9 +70,13 @@ def overview(request):
         emp = employee.objects.get(user=request.user)
     except employee.DoesNotExist:
         return redirect(adminhome)
+    ml = managedby.objects.filter(mid=emp.eid)
+    no_ap=0
+    for item in ml:
+            no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
     if emp:
         rl = list(r_leave.objects.filter(emp_id=emp))
-        return render(request,'attendance/overview.html',{'rlist':rl})
+        return render(request,'attendance/overview.html',{'rlist':rl,'no':no_ap})
 
 @login_required
 def approve_leave(request):
@@ -77,7 +85,7 @@ def approve_leave(request):
         ml = list(managedby.objects.filter(mid=emp.eid))
         rl = list()
         for item in ml:
-            l1 = list(r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0))
+            l1 = list(r_leave.objects.filter(emp_id=item.eid))
             rl.extend(l1)
         return render(request,'attendance/approve_leave.html',{'rlist':rl})
     except employee.DoesNotExist:
@@ -95,8 +103,12 @@ def approveselected(request):
 @login_required
 def l_request(request):
     try:
-	    emp = employee.objects.get(user=request.user)
-	    return render(request,'attendance/lrequest.html',{'employee':emp})
+      emp = employee.objects.get(user=request.user)
+      ml = managedby.objects.filter(mid=emp.eid)
+      no_ap=0
+      for item in ml:
+        no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
+      return render(request,'attendance/lrequest.html',{'employee':emp,'no':no_ap})
     except employee.DoesNotExist:
         return redirect(adminhome)
 
@@ -114,30 +126,11 @@ def send(request):
 		#date_2=parse_date(date_2)
 		date_1=datetime.date(date_1.year, date_1.month, date_1.day)
 		#date_2=datetime.date(date_2.year, date_2.month, date_2.day)
-		#to count no of days---------------------------------------
-		#days = np.busday_count( date_1, date_2 )
-		#holidays=public_holidays.objects.all()
-		#for holiday in holidays:
-			#if date_1<holiday.day and date_2>holiday.day:
-				#if holiday.day.isoweekday()<6:
-					#days=days-1
-		#adding request to database----------------------------------------------------------------
+				#adding request to database----------------------------------------------------------------
 		emp=employee.objects.get(user=request.user)
 		b=r_leave(emp_id=emp,date1=date_1,l_type=ltype,reason=reason1)
 		b.save()
-		#making temp url--------------------------------------------
-		hash1, enc1 = hashtest.encode_data([emp.eid,b.l_id,1])
-		hash0, enc0 = hashtest.encode_data([emp.eid,b.l_id,2])
-		#for removing symbols
-		enc1=enc1.replace("=","equal")
-		enc0=enc0.replace("=","equal")
-		enc1=enc1.replace("+","addition")
-		enc0=enc0.replace("+","addition")
-		enc1=enc1.replace("/","backslash")
-		enc0=enc0.replace("/","blackslash")
-		enc1=enc1.replace("?","question")
-		enc0=enc0.replace("?","question")
-
+		
 		#sending email to team lead--------------------------------
 		if ltype=='CL':
 			lt="casual leave"
@@ -183,17 +176,6 @@ def send(request):
 def ladd(request):
 	return HttpResponse("email send")
 
-def approval(request,hash,enc):
-	enc=enc.replace("equal","=")
-	enc=enc.replace("addition","+")
-	enc=enc.replace("backslash","/")
-	enc=enc.replace("question","?")
-	d=hashtest.decode_data(hash, enc)
-	emp=employee.objects.get(eid=d[0])
-	leave=r_leave.objects.get(l_id=d[1])
-	leave.confirmation=d[2]
-	leave.save()
-	return HttpResponse("confirmation recorded")
 
 @login_required
 def logoutf(request):

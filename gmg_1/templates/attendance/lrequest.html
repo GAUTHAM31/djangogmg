@@ -1,20 +1,51 @@
-{% extends 'attendance/base.html' %}
 {% load staticfiles %}
-{% block header %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <title>Leave Request</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
+  
+  
+  
+    <style type="text/css">
+     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
+    color: red;
+}
+.ui-datepicker-header
+  {
+    background: #4386f2;
+  }
+
+  </style>
+
+<!--<link rel="stylesheet" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">-->
+<style type="text/css">
+
+  .img-responsive  {
+    margin: 0 auto;
+}
+</style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ <!--  <script type="text/javascript">
   var disabledDates = ['01/02/2017', '1/1/2017'];
 
 $(function(){
 
     $('#datepicker').datepicker({
 
-        dateFormat: 'yy-mm-dd',
-        beforeShowDay: editDays
+        dateFormat: 'dd/mm/yy',
+        beforeShowDay: editDays,
+      
+        
 
     });
 
@@ -34,8 +65,9 @@ $(function(){
 
     $('#datepicker2').datepicker({
 
-        dateFormat: 'yy-mm-dd',
-        beforeShowDay: editDays
+        dateFormat: 'dd/mm/yy',
+        beforeShowDay: editDays,
+        
 
     });
 
@@ -51,31 +83,63 @@ $(function(){
      }   
 
 });
+
+  </script> -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
   </script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
   
-    <style type="text/css">
-     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
-    color: red;
-}
-.ui-datepicker-header
-  {
-    background: #4386f2;
-  }
-
-  </style>
-
-{% endblock %} 
-
-{% block content %}
+      <nav class="navbar navbar-inverse">
+        
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="http://www.goodmethodsglobal.com/">Good Methods Globals</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendence <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"></a></li>
+            <li><a href="/overview/">Attendence Overview</a></li>
+            <li><a href="/lrequest/">Leave Request</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Approve Leave</a></li>
+             </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/home/"><span class="glyphicon glyphicon-user"></span>Home </a></li>
+        <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      </ul>
+    </div>
+  
+</nav>
+  <div class="container ">
 
 <form class="lrequest" method="post" action="/lrequestConfirmed/">
 {% csrf_token %}
 <p>Date From: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
-<p>Date To: <input type="text" id="datepicker2" name="datet" required="true"></p><br/>
 <p>Type:</p><input type="radio" name="type" value="CL" checked> Casual leave<br>
  <input type="radio" name="type" value="CL" > Sick Leave<br>
 <p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
 <button>Send</button>
  </form>
- 
-{% endblock %}
+</div>
+</div>
+
+
+</body>
+</html>

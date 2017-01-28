@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^approve_submit/',views.approveselected),
     url(r'^lrequestConfirmed/',views.send),
     url(r'^confirmation/',views.ladd),
-    url(r'^approve/(?P<hash>\w+)/(?P<enc>\w+)',views.approval),
+    
     url(r'^logout/',views.logoutf),
     url(r'^adminlogin/',views.adminl),
     url(r'^admins/',views.admincheck),

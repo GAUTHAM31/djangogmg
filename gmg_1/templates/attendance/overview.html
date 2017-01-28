@@ -3,13 +3,20 @@
 {% load staticfiles %}
 {% block header %}
   <title>Overview</title>
+  <style type="text/css">
+    .table-responsive
+    {
+      padding-top: 50px;
+    }
+  </style>
+
 {% endblock %}
 
 
 {% block content %}
   <div class="table-responsive">          
   <table class="table table-hover table-bordered">
-    <thead>
+    <thead bgcolor="#6ba3ff">
       <tr>
     <th>Leave Type</th>
     <th>Date</th> 
@@ -24,9 +31,9 @@
         <td class="text-left">{{ item.date1 }}</td>
         <td class="text-left">{{ item.reason }}</td>
         {% if item.confirmation == 1 %}
-            <td class="text-left">approved</td>
+            <td class="text-left" bgcolor="#6fff4f">Approved</td>
         {% else %}
-            <td class="text-left">pending</td>
+            <td class="text-left" bgcolor="#f6f98e">Pending</td>
         {% endif %}
       </tr>
     {% endfor %}
