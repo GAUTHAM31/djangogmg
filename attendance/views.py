@@ -54,7 +54,7 @@ def home(request):
     try:
         emp = employee.objects.get(user=request.user)
     except employee.DoesNotExist:
-        emp=None
+        return redirect(adminhome)
     slt=r_leave.objects.filter(l_type='SL').filter(emp_id=emp).filter(confirmation=1).count()
     clt=r_leave.objects.filter(l_type='CL').filter(emp_id=emp).filter(confirmation=1).count()
     elt=r_leave.objects.filter(l_type='EL').filter(emp_id=emp).filter(confirmation=1).count()
