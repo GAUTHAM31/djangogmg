@@ -203,7 +203,7 @@ def ajaxtest(request):
         post_text = request.POST.get('the_post')
         print post_text,request.POST.get('the_post')
         response_data = {}
-        
+
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
@@ -321,7 +321,7 @@ def addusermain(request):
         admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
         return redirect(home)
-	return render(request,'attendance/adduser.html',{})
+    return render(request,'attendance/adduser.html',{})
 
 @login_required(login_url='/adminlogin/')
 def edituser(request):
