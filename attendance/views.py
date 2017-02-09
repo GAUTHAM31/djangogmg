@@ -11,10 +11,11 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth import logout
 from datetime import timedelta, date
+from django.utils import timezone
 import teste
 import numpy as np
 import datetime
-import hashtest
+import hashtest,json
 
 
 def index(request):
@@ -41,10 +42,12 @@ def logina(request):
 			else:
 				return HttpResponse("DISABLED")
 		else:
-			return redirect(index)#redirect to invaild  username password url
+			return redirect(tryagain)#redirect to invaild  username password url
 			#HttpResponse("invaild")
 	else:
 		return redirect(index)#redirect if not post request was send
+def tryagain(request):
+  return render(request,'attendance/loginagain.html',{})
 
 @login_required
 def home(request):
@@ -102,41 +105,44 @@ def approveselected(request):
 
 @login_required
 def l_request(request):
+    pubh=public_holidays.objects.all()
     try:
       emp = employee.objects.get(user=request.user)
       ml = managedby.objects.filter(mid=emp.eid)
+
       no_ap=0
       for item in ml:
         no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
-      return render(request,'attendance/lrequest.html',{'employee':emp,'no':no_ap})
+      return render(request,'attendance/lrequest.html',{'employee':emp,'no':no_ap,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'holidays':pubh})
     except employee.DoesNotExist:
         return redirect(adminhome)
 
 
 @login_required
 def send(request):
-	context = RequestContext(request)
-	if request.method == 'POST':
-		date_1= request.POST['datef']
-		#date_2= request.POST['datet']
-		ltype= request.POST['type']
-		reason1= request.POST['reason']
-		#converting date from unicode to date---------------------
-		date_1=parse_date(date_1)
-		#date_2=parse_date(date_2)
-		date_1=datetime.date(date_1.year, date_1.month, date_1.day)
-		#date_2=datetime.date(date_2.year, date_2.month, date_2.day)
-				#adding request to database----------------------------------------------------------------
-		emp=employee.objects.get(user=request.user)
-		b=r_leave(emp_id=emp,date1=date_1,l_type=ltype,reason=reason1)
-		b.save()
-		
-		#sending email to team lead--------------------------------
-		if ltype=='CL':
-			lt="casual leave"
-		else:
-			lt="sick leave"
-		email_content = """
+  context = RequestContext(request)
+  if request.method == 'POST':
+    date_1= request.POST.get('datef')
+    print request.POST.get('type')
+    ltype=request.POST.get('type')
+    reason1= request.POST.get('reason')
+    #converting date from unicode to date---------------------
+    date_1=parse_date(date_1)
+    print date_1,ltype
+    date_1=datetime.date(date_1.year, date_1.month, date_1.day)
+    #date_2=datetime.date(date_2.year, date_2.month, date_2.day)
+    #adding request to database----------------------------------------------------------------
+    emp=employee.objects.get(user=request.user)
+    b=r_leave(emp_id=emp,date1=date_1,l_type=ltype,reason=reason1)
+    b.save()
+    #sending email to team lead--------------------------------
+    if ltype=='CL':
+      lt="casual leave"
+    elif ltype=='EL':
+      lt="Earned leave"
+    else:
+      lt="sick leave"
+    email_content = """
 <html>
 <head>
 <style>
@@ -157,20 +163,20 @@ def send(request):
 </style>
 </head>
 <body>Attendance Record:"""+str(emp.s_leave)+"    "+str(emp.c_leave)+"  Reason "+reason1+"""
-<a href="http://localhost:8000/approve/"""+hash1+"/"+enc1+"""" >
+<a href="http://localhost:8000/approve/">
 <button class="button button2" name="response">Yes</button></a></div>
-<a href="http://localhost:8000/approve/"""+hash0+"/"+enc0+"""" >
+<a href="http://localhost:8000/approve/ >
 <button class="button button2" name="response">No</button></a></div>
 </body></html>"""
-        #add default email here if necessary
-		to = managedby.objects.all().filter(eid=emp)
-		FROM ='test4generalpurpose@gmail.com'
-		for TO in to:
+    to = managedby.objects.all().filter(eid=emp)
+    FROM ='test4generalpurpose@gmail.com'
+    for TO in to:
 			mm=employee.objects.get(eid=TO.mid)
 			teste.py_mail("Leave Request", email_content, mm.user.email, FROM)
-		return redirect('/confirmation/')
-	else:
-		return redirect('/lrequest/')
+    response_data = { }
+    return HttpResponse(json.dumps(response_data),content_type="application/json")
+  else:
+    return redirect('/lrequest/')
 
 @login_required
 def ladd(request):
@@ -181,6 +187,32 @@ def ladd(request):
 def logoutf(request):
 	logout(request)
 	return redirect(index)
+
+
+@login_required
+def ajaxview(request):
+  try:
+    emp = employee.objects.get(user=request.user)
+  except employee.DoesNotExist:
+    return redirect(adminhome)
+  return render(request,'attendance/ajaxtest.html',{'emp':emp})
+
+@login_required
+def ajaxtest(request):
+    if request.method == 'POST':
+        post_text = request.POST.get('the_post')
+        print post_text,request.POST.get('the_post')
+        response_data = {}
+        
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
 
 
 

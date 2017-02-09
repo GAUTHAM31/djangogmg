@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- 
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  
-  
-  
+
+
+
     <style type="text/css">
      .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
     color: red;
@@ -32,6 +32,19 @@
   .img-responsive  {
     margin: 0 auto;
 }
+.label-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+  border-radius: 10rem;
+}
+#radio {
+    position: absolute;
+    height: 200px;
+    width: 400px;
+    margin: -100px 0 0 -200px;
+    top: 50%;
+    left: 50%;
+}
 </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -44,69 +57,60 @@ $(function(){
 
         dateFormat: 'dd/mm/yy',
         beforeShowDay: editDays,
-      
-        
+
+
 
     });
 
 
     function editDays(date) {
         for (var i = 0; i < disabledDates.length; i++) {
-            if (new Date(disabledDates[i]).toString() == date.toString()) {             
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
                  return [false];
             }
         }
          var weekenddate = $.datepicker.noWeekends(date);
-         return weekenddate; 
-     }   
+         return weekenddate;
+     }
 
 });
-$(function(){
-
-    $('#datepicker2').datepicker({
-
-        dateFormat: 'dd/mm/yy',
-        beforeShowDay: editDays,
-        
-
-    });
-
-
-    function editDays(date) {
-        for (var i = 0; i < disabledDates.length; i++) {
-            if (new Date(disabledDates[i]).toString() == date.toString()) {             
-                 return [false];
-            }
-        }
-         var weekenddate = $.datepicker.noWeekends(date);
-         return weekenddate; 
-     }   
-
-});
-
   </script> -->
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+   <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
+    var disabledDates = [{% for item in holidays %}'{{item.day.month}}/{{item.day.day}}/{{item.day.year}}',{% endfor %}];
   $( function() {
-    $( "#datepicker" ).datepicker();
+    $( "#datepicker" ).datepicker({
+      dateFormat: 'dd/mm/yy',
+      beforeShowDay: editDays,
+    });
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
   } );
-  </script>
+  </script>-->
 </head>
 <body>
 
 <div class="container-fluid">
   <div class="row">
-  
+
       <nav class="navbar navbar-inverse">
-        
+
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                        
+          <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="http://www.goodmethodsglobal.com/">Good Methods Globals</a>
+      <a class="navbar-brand" href="/home/"><img src="{% static 'gmg.png' %}" width="150px"  height="35px" "></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -118,25 +122,127 @@ $(function(){
             <li><a href="/lrequest/">Leave Request</a></li>
           </ul>
         </li>
-        <li><a href="#">Approve Leave</a></li>
+        <li><a href="#">Approve Leave<span class="label label-pill label-danger">{{no}}</span></a></li>
              </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/home/"><span class="glyphicon glyphicon-user"></span>Home </a></li>
         <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
-  
-</nav>
-  <div class="container ">
 
-<form class="lrequest" method="post" action="/lrequestConfirmed/">
+</nav>
+  <div class="container text-center">
+  <div ><p id="results"></p></div>
+
+<form class="lrequest" method="post" id="post-form">
 {% csrf_token %}
-<p>Date From: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
-<p>Type:</p><input type="radio" name="type" value="CL" checked> Casual leave<br>
- <input type="radio" name="type" value="CL" > Sick Leave<br>
-<p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
-<button>Send</button>
- </form>
+<p><font size="5" color="#1da805">Date </font><br><br><input type="text" id="datepicker" name="datef" required="true"></p><br/>
+
+<p><font size="5" color="#1da805">Reason  :</font><br><br><input type="text" id="reason" name="reason" name="reason" required="true"></p><br><br>
+<p><font size="5" color="#1da805">Type</font></p>
+<select id="type">
+  <option value="SL">Sick Leave</option>
+  <option value="EL">Earned Leave</option>
+  <option value="CL" selected>Causal Leave</option>
+</select>
+
+<br><br>
+<button  class="btn btn-danger" type="submit">Send</button>
+ </form></div>
+ 
+ <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+ var disabledDates = [{% for item in holidays %}'{{item.day.month}}/{{item.day.day}}/{{item.day.year}}',{% endfor %}];
+  $( function() {
+    $( "#datepicker" ).datepicker({
+      dateFormat: 'dd/mm/yy',
+      beforeShowDay: editDays,
+    });
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
+  } );
+jQuery(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+  $('#post-form').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!")  // sanity check
+    create_post();
+});
+
+function create_post() {
+    console.log("create post is working!")
+    $.ajax({
+        url : "/lrequestConfirmed/", // the endpoint
+        type : "POST", // http method
+        data : {
+          datef: $('#datepicker').val(),
+          type: $('#type').val(),
+          reason: $('#reason').val()
+
+        }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            $('#datepicker').val(''); // remove the value from the input
+            $('#reason').val(''); 
+            $('#results').html("<div class='alert alert-success alert-dismissable'><a href='#'' class='close' data-dismiss='alert' aria-label='close'>×</a><strong>Success!</strong> Your request has been recored</div>");
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert alert-danger alert-dismissable'><a href='#'' class='close' data-dismiss='alert' aria-label='close'>×</a><strong>Oops!</strong> Something went wrong</div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+};
+
+</script>
 </div>
 </div>
 

@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$',views.index),
     url(r'^login/',views.logina),
+    url(r'^logintryagain/',views.tryagain),
     url(r'^lrequest/',views.l_request),
     url(r'^home/',views.home),
     url(r'^overview/',views.overview),
@@ -28,7 +29,8 @@ urlpatterns = [
     url(r'^approve_submit/',views.approveselected),
     url(r'^lrequestConfirmed/',views.send),
     url(r'^confirmation/',views.ladd),
-    
+    url(r'^ajax/',views.ajaxview),
+    url(r'^ajaxsend/',views.ajaxtest),
     url(r'^logout/',views.logoutf),
     url(r'^adminlogin/',views.adminl),
     url(r'^admins/',views.admincheck),
