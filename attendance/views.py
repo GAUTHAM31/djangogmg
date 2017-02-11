@@ -42,7 +42,7 @@ def logina(request):
 			else:
 				return HttpResponse("DISABLED")
 		else:
-			return redirect(tryagain)#redirect to invaild  username password url
+			return redirect(trya)#redirect to invaild  username password url
 			#HttpResponse("invaild")
 	else:
 		return redirect(index)#redirect if not post request was send
@@ -203,7 +203,7 @@ def ajaxtest(request):
         post_text = request.POST.get('the_post')
         print post_text,request.POST.get('the_post')
         response_data = {}
-
+        
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
@@ -246,7 +246,7 @@ def admincheck(request):
 def adminhome(request):
     try:
         admin = admins.objects.get(user=request.user)
-        return render(request,'attendance/adminhome.html',{})
+        return render(request,'admintemp/adminhome.html',{})
     except admins.DoesNotExist:
         return redirect(home)
 
@@ -275,6 +275,7 @@ def dailyreport(request):
        date1=parse_date(date1)
        date1=datetime.date(date1.year, date1.month, date1.day)
        dailyatt = list(att_record.objects.filter(date=date1))
+
        return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
     else:
        dailyatt = list()
@@ -321,7 +322,7 @@ def addusermain(request):
         admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
         return redirect(home)
-    return render(request,'attendance/adduser.html',{})
+	return render(request,'attendance/adduser.html',{})
 
 @login_required(login_url='/adminlogin/')
 def edituser(request):
@@ -371,8 +372,8 @@ def adminapprove_leave(request):
         admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
         return redirect(home)
-    l1 = list(r_leave.objects.filter(confirmation=0))
-    return render(request,'attendance/adminapproveleave.html',{'rlist':l1})
+    l1 = list(r_leave.objects.all())
+    return render(request,'admintemp/approveleave.html',{'rlist':l1})
 
 
 @login_required(login_url='/adminlogin/')
