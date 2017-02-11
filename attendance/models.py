@@ -37,11 +37,11 @@ class r_leave(models.Model):
     reason = models.CharField(max_length=100)
     confirmation=models.IntegerField(default=0)
     l_id = models.AutoField(primary_key=True)
-    
+
 class att_record(models.Model):
-	emp_id = models.IntegerField()
+	emp_id = models.ForeignKey(employee, on_delete=models.CASCADE)
 	date = models.DateField()
-	status_type=((-1,'T'),(0,'A'),(1,'P'),(2,'SL'),(3,'CL'),(4,'EL'),(5,'PC'))
+	status_type=((-1,'T'),(0,'A'),(1,'P'),(2,'SL'),(3,'CL'),(4,'EL'),(5,'PC'),(6,'OL'))
 	status=models.IntegerField(choices=status_type,default=-1)
 	time_in=models.DateTimeField(null=True)
 	time_out=models.DateTimeField(null=True)
