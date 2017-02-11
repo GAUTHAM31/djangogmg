@@ -1,0 +1,33 @@
+header, footer {
+    background-color: #1f329a;
+    color: #ddd;
+    padding: 20px;
+    text-align: center;
+}
+#main{
+    padding-top: 50px;
+}
+.tabContent{
+    display:none;
+}
+#tab0{
+    display: block;
+}
+@media (min-width: 768px) {
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
