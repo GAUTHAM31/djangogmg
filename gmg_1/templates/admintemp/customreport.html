@@ -1,0 +1,119 @@
+{% extends 'admintemp/base.html' %}
+{% load staticfiles %}
+{% block header %}
+  <title>Custom Report</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  var disabledDates = ['01/02/2017', '1/1/2017'];
+
+$(function(){
+
+    $('#datepicker').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
+});
+$(function(){
+
+    $('#datepicker2').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
+});
+  </script>
+
+    <style type="text/css">
+     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
+    color: red;
+}
+.ui-datepicker-header
+  {
+    background: #4386f2;
+  }
+
+  </style>
+{% endblock %}
+
+
+{% block content %}
+<form class="daily" method="post" action="/customreport/">
+{% csrf_token %}
+<p>Datefrom: <input type="text" id="datepicker" name="datef" required="true"></p><br/>
+<p>Dateto: <input type="text" id="datepicker2" name="datet" required="true"></p><br/>
+
+<button>Send</button>
+ </form>
+
+ <div class="table-responsive">
+   <table class="table table-hover table-bordered">
+     <thead bgcolor="#6ba3ff">
+  <tr>
+    <th>name</th>
+    {% for item in dl %}
+    <th>{{item}}</th>
+    {% endfor %}
+  </tr>
+    </thead>
+    {% for item in clist %}
+       <tr>
+
+
+         {% for item1 in item %}
+         {% if item1 == -1 %}
+             <td class="text-left" bgcolor="#afafa5">Terminated</td>
+         {% elif item1 == 0 %}
+             <td class="text-left" bgcolor="#fc4949">Absent</td>
+         {% elif item1 == 1 %}
+             <td class="text-left" bgcolor="#cff959">Present</td>
+         {% elif item1 == 2 %}
+             <td class="text-left" bgcolor="#e0be26">Sick Leave</td>
+         {% elif item1 == 3 %}
+             <td class="text-left" bgcolor="#ce2ba0">Casual Leave</td>
+         {% elif item1 == 4 %}
+             <td class="text-left" bgcolor="#607bff">Earned Leave</td>
+         {% elif item1 == 5 %}
+             <td class="text-left" bgcolor="#b6db9b">Persent*</td>
+         {% elif item1 == 6 %}
+             <td class="text-left" bgcolor="#f2a529">Earned Leave</td>
+         {% else %}
+             <td class="text-left" >{{item1}}</td>
+         {% endif %}
+         {% endfor %}
+
+
+       </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

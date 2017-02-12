@@ -1,0 +1,79 @@
+{% extends 'admintemp/base.html' %}
+{% load staticfiles %}
+{% block header %}
+  <title>Other Leave Allotment</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  var disabledDates = ['01/02/2017', '1/1/2017'];
+
+$(function(){
+
+    $('#datepicker').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
+});
+$(function(){
+
+    $('#datepicker2').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate;
+     }
+
+});
+  </script>
+
+    <style type="text/css">
+     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default {
+    color: red;
+}
+.ui-datepicker-header
+  {
+    background: #4386f2;
+  }
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<form class="lrequest" method="post" action="/addotherleave/">
+{% csrf_token %}
+<p>Eid: <input type="text" name="eid" required="true"></p><br/>
+<p>Date From: <input type="text" id="datepicker" name="date1" required="true"></p><br/>
+<p>Date To: <input type="text" id="datepicker2" name="date2" required="true"></p><br/>
+<p>Reason :<input type="text" name="reason" name="reason" required="true"></p>
+<button>Send</button>
+ </form>
+{% endblock %}
+</body>
+</html>
