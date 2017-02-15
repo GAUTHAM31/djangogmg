@@ -82,6 +82,13 @@ def overview(request):
         return render(request,'attendance/overview.html',{'rlist':rl,'no':no_ap})
 
 @login_required
+def deleteselected(request):
+    if request.method == 'POST':
+       lrid= request.POST['l_id']
+       r_leave.objects.filter(l_id=lrid).delete()
+       return redirect(overview)
+
+@login_required
 def approve_leave(request):
     try:
         emp = employee.objects.get(user=request.user)
