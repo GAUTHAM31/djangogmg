@@ -1,0 +1,28 @@
+{% extends 'admintemp/base.html' %}
+{% load staticfiles %}
+{% block header %}
+  <title>Add User</title>
+  <style type="text/css">
+    .table-responsive
+    {
+      padding-top: 50px;
+    }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+ <form class="adduser form" method="post" action="/adduser/">
+    {% csrf_token %}
+      <input type="text" name="eid" placeholder="eid"/>
+      <input type="text" name="username" placeholder="username"/>
+      <input type="text" name="fname" placeholder="fname"/>
+
+      <input type="text" name="lname" placeholder="lname"/>
+
+      <input type="text" name="email" placeholder="email"/>
+
+      <input type="password" name="password" placeholder="password"/>
+      <button>ADD</button>
+{% endblock %}

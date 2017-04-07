@@ -1,0 +1,33 @@
+{% extends 'admintemp/base.html' %}
+{% load staticfiles %}
+{% block header %}
+<title> LOGS </title>
+<style type="text/css">
+  .table-responsive
+  {
+    padding-top: 50px;
+  }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead bgcolor="#6ba3ff">
+  <tr>
+    <th>Timestamp</th>
+    <th>Data</th>
+    <th>admin id</th>
+  </tr>
+    {% for item in loglist %}
+       <tr>
+        <td>{{ item.logdate }}</td>
+        <td>{{ item.logdata}}</td>
+        <td>{{ item.admin_id }}</td>
+       </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

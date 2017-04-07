@@ -14,14 +14,15 @@
 
 
 {% block content %}
-  <div class="table-responsive">          
+  <div class="table-responsive">
   <table class="table table-hover table-bordered">
     <thead bgcolor="#6ba3ff">
       <tr>
     <th>Leave Type</th>
-    <th>Date</th> 
+    <th>Date</th>
     <th>Reason</th>
     <th>Status</th>
+    <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -34,6 +35,14 @@
             <td class="text-left" bgcolor="#6fff4f">Approved</td>
         {% else %}
             <td class="text-left" bgcolor="#f6f98e">Pending</td>
+            <td>
+                <form action="/approve_submit/" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ item.l_id }}" name="l_id"/>
+                <input type="submit" class="btn" style="font-size:10pt;color:white;background-color:#16a500;border:2px
+                solid #336600;padding:3px;" value=Delete name="mybtn">
+                </form>
+            </td>
         {% endif %}
       </tr>
     {% endfor %}
@@ -41,4 +50,3 @@
   </table>
   </div>
 {% endblock %}
-                             

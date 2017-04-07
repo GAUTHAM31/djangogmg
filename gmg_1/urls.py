@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^lrequest/',views.l_request),
     url(r'^home/',views.home),
     url(r'^overview/',views.overview),
+    url(r'^delete_submit/',views.deleteselected),
     url(r'^approve_leave/',views.approve_leave),
     url(r'^approve_submit/',views.approveselected),
     url(r'^lrequestConfirmed/',views.send),

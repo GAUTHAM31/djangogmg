@@ -42,8 +42,8 @@ def logina(request):
 			else:
 				return HttpResponse("DISABLED")
 		else:
-			return redirect(trya)#redirect to invaild  username password url
 			#HttpResponse("invaild")
+			return redirect(tryagain)#redirect to invaild  username password url
 	else:
 		return redirect(index)#redirect if not post request was send
 def tryagain(request):
@@ -80,6 +80,13 @@ def overview(request):
     if emp:
         rl = list(r_leave.objects.filter(emp_id=emp))
         return render(request,'attendance/overview.html',{'rlist':rl,'no':no_ap})
+
+@login_required
+def deleteselected(request):
+    if request.method == 'POST':
+       lrid= request.POST['l_id']
+       r_leave.objects.filter(l_id=lrid).delete()
+       return redirect(overview)
 
 @login_required
 def approve_leave(request):
@@ -203,7 +210,7 @@ def ajaxtest(request):
         post_text = request.POST.get('the_post')
         print post_text,request.POST.get('the_post')
         response_data = {}
-        
+
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
@@ -290,6 +297,9 @@ def customreport(request):
     except admins.DoesNotExist:
         return redirect(home)
     dayatt=list()
+    dlist=list()
+    da=list()
+    single_date=list()
     if request.method == 'POST':
         date1=request.POST['datef']
         date2=request.POST['datet']
@@ -305,24 +315,47 @@ def customreport(request):
             for n in range(int ((end_date - start_date).days)):
                 yield start_date + timedelta(n)
 
+        for single_date in daterange(date1, date2):
+          dlist.append(single_date)
+
+        elist=employee.objects.all()
+        dayatt1=att_record.objects.all().filter(date__gte=date1)
+        dayatt=dayatt1.filter(date__lte=date2)
+        for emp in elist:
+          if dayatt.filter(emp_id=emp):
+           alist=list()
+           alist.append(emp.fname)
+           alist.extend(list(dayatt.values_list('status', flat=True).filter(emp_id=emp)))
+           da.append(alist)
+
+
+
         #for DATE in daterange(date1, date2):
         #samples = Sample.objects.filter(sampledate__gte=datetime.date(2011, 1, 1),
                                 #sampledate__lte=datetime.date(2011, 1, 31))
-        dayatt1=att_record.objects.all().filter(date__gte=date1)
-        dayatt=dayatt1.filter(date__lte=date2)
+        #dayatt1=att_record.objects.all().filter(date__gte=date1)
+        #dayatt=dayatt1.filter(date__lte=date2)
             #dayatt=list(dayatt1)
             #customattlist.append(dayatt)
+<<<<<<< HEAD
         return render(request,'admintemp/customreport.html',{'clist':dayatt})
     else:
         customattlist=list()
         return render(request,'admintemp/customreport.html',{'clist':dayatt})
+=======
+        return render(request,'admintemp/customreport.html',{'clist':da,'dl':dlist})
+    else:
+        customattlist=list()
+        return render(request,'admintemp/customreport.html',{'clist':da,'dl':dlist})
+>>>>>>> d98ebb1b17f5561db1b625a990a8c653cf07b64f
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
     try:
-        admin = admins.objects.get(user=request.user)
+      admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
-        return redirect(home)
-	return render(request,'attendance/adduser.html',{})
+      return redirect(home)
+    return render(request,'admintemp/adduser.html',{})
+
 
 @login_required(login_url='/adminlogin/')
 def edituser(request):
@@ -335,9 +368,9 @@ def edituser(request):
         eid=request.POST['eid']
         details=employee.objects.get(eid=eid)
 
-        return render(request,'attendance/edituser.html',{'det':details})
+        return render(request,'admintemp/edituser.html',{'det':details})
     else:
-        return render(request,'attendance/edituser.html',{'det':details})
+        return render(request,'admintemp/edituser.html',{'det':details})
 
 @login_required(login_url='/adminlogin/')
 def editsuccess(request):
@@ -403,7 +436,7 @@ def unauthorised(request):
     except admins.DoesNotExist:
         return redirect(home)
     ulist=att_record.objects.filter(status=0)
-    return render(request,'attendance/unauthorised.html',{'ulist':ulist})
+    return render(request,'admintemp/unauthorised.html',{'ulist':ulist})
 
 def insertlog(admin_id,logdata,logdate):
     try:
@@ -478,7 +511,7 @@ def addotherleave(request):
             date1 += datetime.timedelta(days=1)
         return redirect(adminhome)
     else:
-        return render(request,'attendance/otherleave.html',{})
+        return render(request,'admintemp/otherleave.html',{})
 
 @login_required(login_url='/adminlogin/')
 def adduser(request):
@@ -590,6 +623,6 @@ def viewlogs(request):
     try:
         admin = admins.objects.get(user=request.user)
         loglist=list(editlogs.objects.filter())
-        return render(request,'attendance/logs.html',{'loglist':loglist})
+        return render(request,'admintemp/logs.html',{'loglist':loglist})
     except admins.DoesNotExist:
         return redirect(home)
