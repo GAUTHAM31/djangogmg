@@ -1,0 +1,121 @@
+
+  
+{% extends 'admintemp/base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+<title>Custom Report</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style type="text/css">
+     .ui-state-holiday .ui-state-default, .ui-datepicker-week-end .ui-state-default
+      {
+    	color: red;
+		}
+	.ui-datepicker-header
+	  {
+	    background: #4386f2;
+	  }
+ </style>
+
+ 
+
+{% endblock %}
+{% block content %}
+<form class="form-horizontal" method="post" action="/customreport/">
+{% csrf_token %}
+
+
+			<input type="text" id="datepicker" name="datef" required="true" placeholder="DateForm "> -
+
+			<input type="text" id="datepicker2" name="datet" required="true" placeholder="DateTo"><br>
+
+<button class="btn btn-warning" style="margin-top:1%;">Send</button>
+ </form>
+<br>
+<br>
+<table class="table table-hover table-bordered">
+    <thead bgcolor="#6ba3ff">
+  <tr>
+    <th>Eid</th>
+    <th>Status</th> 
+    <th>Time in</th>
+    <th>Time out</th>
+  </tr>
+  </thead>
+    {% for item in clist %}
+       <tr>
+        <td>{{ item.emp_id }}</td>
+        {% if item.status == -1 %}
+            <td  bgcolor="#afafa5">Terminated</td>
+        {% elif item.status == 0 %}
+            <td  bgcolor="#ff6051">Absent</td>
+        {% elif item.status == 1 %}
+            <td  >Present</td>
+        {% elif item.status == 2 %}
+            <td  bgcolor="#e0be26">Sick Leave</td>
+        {% elif item.status == 3 %}
+            <td  bgcolor="#bafcf4">Casual Leave</td>
+        {% elif item.status == 4 %}
+            <td  bgcolor="#c2ff51">Earned Leave</td>
+        {% elif item.status == 5 %}
+            <td  bgcolor="#b6db9b">Persent*</td>
+        {% else %}
+            <td  bgcolor="#f2a529">Other Leave</td>
+        {% endif %}        
+        <td>{{ item.time_in }}</td>
+        <td>{{ item.time_out }}</td>
+       </tr>
+    {% endfor %}
+</table>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  var disabledDates = ['01/02/2017', '1/1/2017'];
+
+$(function(){
+
+    $('#datepicker').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {             
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate; 
+     }   
+
+});
+$(function(){
+
+    $('#datepicker2').datepicker({
+
+        dateFormat: 'yy-mm-dd',
+        beforeShowDay: editDays
+
+    });
+
+
+    function editDays(date) {
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (new Date(disabledDates[i]).toString() == date.toString()) {             
+                 return [false];
+            }
+        }
+         var weekenddate = $.datepicker.noWeekends(date);
+         return weekenddate; 
+     }   
+
+});
+  </script>
+{% endblock %}
+
+ 
+

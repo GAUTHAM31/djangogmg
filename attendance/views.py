@@ -258,10 +258,10 @@ def dailyreport(request):
         return redirect(home)
     if request.method == 'POST':
        dailyatt = list(att_record.objects.filter(date=request.post['date']))
-       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+       return render(request,'admintemp/dailyreport.html',{'dalist':dailyatt})
     else:
        dailyatt = list()
-       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+       return render(request,'admintemp/dailyreport.html',{'dalist':dailyatt})
 
 @login_required(login_url='/adminlogin/')
 def dailyreport(request):
@@ -276,10 +276,10 @@ def dailyreport(request):
        date1=datetime.date(date1.year, date1.month, date1.day)
        dailyatt = list(att_record.objects.filter(date=date1))
 
-       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+       return render(request,'admintemp/dailyreport.html',{'dalist':dailyatt})
     else:
        dailyatt = list()
-       return render(request,'attendance/dailyreport.html',{'dalist':dailyatt})
+       return render(request,'admintemp/dailyreport.html',{'dalist':dailyatt})
 
 
 
@@ -312,10 +312,10 @@ def customreport(request):
         dayatt=dayatt1.filter(date__lte=date2)
             #dayatt=list(dayatt1)
             #customattlist.append(dayatt)
-        return render(request,'attendance/customreport.html',{'clist':dayatt})
+        return render(request,'admintemp/customreport.html',{'clist':dayatt})
     else:
         customattlist=list()
-        return render(request,'attendance/customreport.html',{'clist':dayatt})
+        return render(request,'admintemp/customreport.html',{'clist':dayatt})
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
     try:
