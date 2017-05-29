@@ -15,12 +15,28 @@
 	  {
 	    background: #4386f2;
 	  }
+  table
+  {
+    padding-top: 10%;
+  }
+  input
+{
+  width: 25%;
+  border: 0;
+  border-bottom: 2px solid #d8d8d8;
+  padding-bottom: 1%;
+}
+input:focus {
+  border-color: #1e9ce6;
+  outline: 0;
+}
  </style>
 
  
 
 {% endblock %}
 {% block content %}
+<h2 style="color:#494a4c;">Custom Report</h2><br>
 <form class="form-horizontal" method="post" action="/customreport/">
 {% csrf_token %}
 
@@ -29,7 +45,7 @@
 
 			<input type="text" id="datepicker2" name="datet" required="true" placeholder="DateTo"><br>
 
-<button class="btn btn-warning" style="margin-top:1%;">Send</button>
+<button class="btn btn-warning" style="margin-top:1%;">Ok</button>
  </form>
 <br>
 <br>
@@ -70,7 +86,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
-  var disabledDates = ['01/02/2017', '1/1/2017'];
+  var disabledDates = [{% for item in holidays %}'{{item.day.month}}/{{item.day.day}}/{{item.day.year}}',{% endfor %}];
 
 $(function(){
 
