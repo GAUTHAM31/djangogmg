@@ -8,19 +8,22 @@
     {
       padding-top: 50px;
     }
+
   </style>
 {% endblock %}
 
 
 {%block content %}
+<h2 style="color:#3d3e3f;">Unauthorised Leave</h2>
 <div class="table-responsive">
   <table class="table table-hover table-bordered">
     <thead bgcolor="#6ba3ff">
   <tr>
-    <th>eid</th>
-    <th>date</th>
-    <th>approve</th>
+    <th>Eid</th>
+    <th>Date</th>
+    <th>Approve</th>
   </tr>
+  </thead>
     {% for item in ulist %}
        <tr>
         <td>{{ item.emp_id }}</td>
@@ -40,7 +43,7 @@
                 <option value="4">Earned Leave</option>
                 <option value="5">Present</option>
                 </select>
-                <input type="submit" class="btn" value=Change name="mybtn">
+                <input type="submit" class="btn btn-warning" value=Change name="mybtn">
                 </form>
             </td>
         {% endif %}
