@@ -7,7 +7,8 @@
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
-  var disabledDates = ['01/02/2017', '1/1/2017'];
+  var disabledDates = [{% for item in holidays %}'{{item.day.month}}/{{item.day.day}}/{{item.day.year}}',{% endfor %}];
+
 
 $(function(){
 
@@ -61,26 +62,42 @@ $(function(){
   {
     background: #4386f2;
   }
-
+form
+{
+  padding-top: 5%;
+}
+input
+{
+  width: 30%;
+  border: 0;
+  border-bottom: 2px solid #d8d8d8;
+  padding-bottom: 1%;
+  padding-top: 1%;
+}
+input:focus {
+  border-color: #1e9ce6;
+  outline: 0;
+}
   </style>
 
 {% endblock %}
 
 {% block content %}
+<h2 style="color:#292a2b;">Edit User</h2>
 <form class="selecteid" method="post" action="/edituser/">
 {% csrf_token %}
-eid:<input type="text" name="eid" >
-<button>Send</button>
+<input placeholder="E-id" type="text" name="eid" ><br><br>
+<button class="btn btn-primary">Send</button>
 </form>
 
 <form class="edit" method="post" action="/editsuccess/">
 {% csrf_token %}
-<input type="hidden" name="eid" value="{{det.eid}}"/>
-first name:<input type="text" name="fn" value= " {{det.fname}}" />
-last name:<input type="text" name="ln" value="{{det.lname}}"/>
-email:<input type="text" name="email" value="{{det.user.email}}"/>
-<p>Datejd: <input type="text" id="datepicker" name="jd" required="true" value="{{det.j_date}}"></p><br/>
-<p>Datetd: <input type="text" id="datepicker2" name="td" required="true" value="{{det.t_date}}"></p><br/>
-<button>Send</button>
+<input type="hidden" name="eid" value="{{det.eid}}"/><br>
+<input type="text" name="fn" value= "{{det.fname}}"  placeholder="First Name" /><br>
+<input placeholder="Last name" type="text" name="ln" value="{{det.lname}}"/><br>
+<input placeholder="email" type="text" name="email" value="{{det.user.email}}"/><br>
+<input placeholder="Join Date" type="text" id="datepicker" name="jd" required="true" value="{{det.j_date}}"><br/>
+<input placeholder="Terminate Date" type="text" id="datepicker2" name="td" required="true" value="{{det.t_date}}"><br/><br>
+<button class="btn btn-primary">Send</button>
 </form>
 {% endblock %}

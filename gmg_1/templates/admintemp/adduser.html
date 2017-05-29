@@ -7,22 +7,39 @@
     {
       padding-top: 50px;
     }
+    form
+{
+  padding-top: 5%;
+}
+input
+{
+  width: 30%;
+  border: 0;
+  border-bottom: 2px solid #d8d8d8;
+  padding-bottom: 1%;
+  padding-top: 1%;
+}
+input:focus {
+  border-color: #1e9ce6;
+  outline: 0;
+}
   </style>
 
 {% endblock %}
 
 {% block content %}
+<h2 style="color:#292a2b;">Add User</h2>
 
  <form class="adduser form" method="post" action="/adduser/">
     {% csrf_token %}
-      <input type="text" name="eid" placeholder="eid"/>
-      <input type="text" name="username" placeholder="username"/>
-      <input type="text" name="fname" placeholder="fname"/>
+      <input type="text" name="eid" placeholder="Eid"/><br>
+      <input type="text" name="username" placeholder="Username"/><br>
+      <input type="text" name="fname" placeholder="First Name"/><br>
 
-      <input type="text" name="lname" placeholder="lname"/>
+      <input type="text" name="lname" placeholder="Last Name"/><br>
 
-      <input type="text" name="email" placeholder="email"/>
+      <input type="text" name="email" placeholder="Email"/><br>
 
-      <input type="password" name="password" placeholder="password"/>
-      <button>ADD</button>
+      <input type="password" name="password" placeholder="Password"/><br><br>
+      <button class="btn btn-primary">Add</button>
 {% endblock %}

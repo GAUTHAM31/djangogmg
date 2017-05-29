@@ -13,14 +13,16 @@
 
 
 {% block content %}
+<h2 style="color:#292a2b;">Log</h2><br>
 <div class="table-responsive">
   <table class="table table-hover table-bordered">
     <thead bgcolor="#6ba3ff">
   <tr>
     <th>Timestamp</th>
     <th>Data</th>
-    <th>admin id</th>
+    <th>Admin id</th>
   </tr>
+  </thead>
     {% for item in loglist %}
        <tr>
         <td>{{ item.logdate }}</td>
