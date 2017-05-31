@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <style>
-  .bg-1 { 
+  .bg-1 {
                width:100%;
         }
 
@@ -24,11 +24,11 @@
   </style>
 
 <div class="bg-1">
-  
+
     <h1>Welcome {{fname|capfirst}} {{lname|capfirst}}</h1>
     <img src="{% static 'octocat.jpg' %}" class="img-circle" alt="img" width="150" height="150">
     <h3>Available</h3>
- 
+
 </div>
 <div class="row">
  <div class="col-sm-4">
@@ -67,8 +67,26 @@
   <div class="panel-body"><font size="5" >   {{elt}} </font> </div></div></div>
 </div>
 
+<h3>Total Leaves</h3>
+<div class="row">
+ <div class="col-sm-4">
+<div class="panel panel-default" >
+  <div class="panel-heading" id="sl"><font size="5" color="white">  SickLeave</font>
+</div>
+  <div class="panel-body"><font size="5" >   {{sltotal}} </font> </div></div></div>
+
+<div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="cl"><font size="5" color="white">CasualLeave</font></div>
+  <div class="panel-body"><font size="5" >   {{cltotal}} </font> </div></div></div>
+
+  <div class="col-sm-4">
+<div class="panel panel-default">
+  <div class="panel-heading" id="el"><font size="5" color="white">EarnedLeave</font></div>
+  <div class="panel-body"><font size="5" >   {{eltotal}} </font> </div></div></div>
+</div>
+
 
 
 
 {% endblock %}
-

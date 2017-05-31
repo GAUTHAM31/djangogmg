@@ -42,8 +42,8 @@ def logina(request):
 			else:
 				return HttpResponse("DISABLED")
 		else:
-			return redirect(tryagain)#redirect to invaild  username password url
 			#HttpResponse("invaild")
+			return redirect(tryagain)#redirect to invaild  username password url
 	else:
 		return redirect(index)#redirect if not post request was send
 def tryagain(request):
@@ -63,7 +63,7 @@ def home(request):
     for item in ml:
             no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
     if emp:
-        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt,'no':no_ap})
+        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt,'sltotal':(slt+emp.s_leave),'cltotal':(clt+emp.c_leave),'eltotal':(elt+emp.e_leave),'no':no_ap})
     else:
         return redirect(adminhome)
 
@@ -80,6 +80,13 @@ def overview(request):
     if emp:
         rl = list(r_leave.objects.filter(emp_id=emp))
         return render(request,'attendance/overview.html',{'rlist':rl,'no':no_ap})
+
+@login_required
+def deleteselected(request):
+    if request.method == 'POST':
+       lrid= request.POST['l_id']
+       r_leave.objects.filter(l_id=lrid).delete()
+       return redirect(overview)
 
 @login_required
 def approve_leave(request):
@@ -203,7 +210,7 @@ def ajaxtest(request):
         post_text = request.POST.get('the_post')
         print post_text,request.POST.get('the_post')
         response_data = {}
-        
+
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
@@ -290,6 +297,9 @@ def customreport(request):
     except admins.DoesNotExist:
         return redirect(home)
     dayatt=list()
+    dlist=list()
+    da=list()
+    single_date=list()
     if request.method == 'POST':
         date1=request.POST['datef']
         date2=request.POST['datet']
@@ -305,24 +315,42 @@ def customreport(request):
             for n in range(int ((end_date - start_date).days)):
                 yield start_date + timedelta(n)
 
+        for single_date in daterange(date1, date2):
+          dlist.append(single_date)
+
+        elist=employee.objects.all()
+        dayatt1=att_record.objects.all().filter(date__gte=date1)
+        dayatt=dayatt1.filter(date__lte=date2)
+        for emp in elist:
+          if dayatt.filter(emp_id=emp):
+           alist=list()
+           alist.append(emp.fname)
+           alist.extend(list(dayatt.values_list('status', flat=True).filter(emp_id=emp)))
+           da.append(alist)
+
+
+
         #for DATE in daterange(date1, date2):
         #samples = Sample.objects.filter(sampledate__gte=datetime.date(2011, 1, 1),
                                 #sampledate__lte=datetime.date(2011, 1, 31))
-        dayatt1=att_record.objects.all().filter(date__gte=date1)
-        dayatt=dayatt1.filter(date__lte=date2)
+        #dayatt1=att_record.objects.all().filter(date__gte=date1)
+        #dayatt=dayatt1.filter(date__lte=date2)
             #dayatt=list(dayatt1)
             #customattlist.append(dayatt)
+
         return render(request,'admintemp/customreport.html',{'clist':dayatt})
     else:
         customattlist=list()
         return render(request,'admintemp/customreport.html',{'clist':dayatt})
+
 @login_required(login_url='/adminlogin/')
 def addusermain(request):
     try:
-        admin = admins.objects.get(user=request.user)
+      admin = admins.objects.get(user=request.user)
     except admins.DoesNotExist:
-        return redirect(home)
+      return redirect(home)
     return render(request,'admintemp/adduser.html',{})
+
 
 @login_required(login_url='/adminlogin/')
 def edituser(request):
