@@ -59,11 +59,13 @@ def home(request):
     clt=r_leave.objects.filter(l_type='CL').filter(emp_id=emp).filter(confirmation=1).count()
     elt=r_leave.objects.filter(l_type='EL').filter(emp_id=emp).filter(confirmation=1).count()
     ml = managedby.objects.filter(mid=emp.eid)
+    month = datetime.datetime.now().strftime("%m")
+    rl = list(r_leave.objects.filter(emp_id=emp).filter(date1__month=month))
     no_ap=0
     for item in ml:
             no_ap = no_ap + r_leave.objects.filter(emp_id=item.eid).filter(confirmation=0).count()
     if emp:
-        return render(request,'attendance/home.html',{'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt,'sltotal':(slt+emp.s_leave),'cltotal':(clt+emp.c_leave),'eltotal':(elt+emp.e_leave),'no':no_ap})
+        return render(request,'attendance/home.html',{'monthlyrequest':rl,'fname':emp.fname,'lname':emp.lname,'sl':emp.s_leave,'cl':emp.c_leave,'el':emp.e_leave,'slt':slt,'clt':clt,'elt':elt,'sltotal':(slt+emp.s_leave),'cltotal':(clt+emp.c_leave),'eltotal':(elt+emp.e_leave),'no':no_ap})
     else:
         return redirect(adminhome)
 
