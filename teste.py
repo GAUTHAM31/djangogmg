@@ -30,7 +30,7 @@ Please visit us <a href="http://www.mysite.com">online</a>!"""
         server.set_debuglevel(1)
  
     # Credentials (if needed) for sending the mail
-    password = "gmggmggmg"
+    password = ""
  
     server.starttls()
     server.login(FROM,password)
